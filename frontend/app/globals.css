@@ -1,0 +1,151 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --petrol-900: #0B3A3F;
+  --petrol-600: #0F6E71;
+  --saffron-500: #E08A2C;
+  --ink-900: #12181A;
+  --mist-100: #F3F6F5;
+  --paper-0: #FFFFFF;
+  --line-200: #DDE5E3;
+  --background: var(--mist-100);
+  --foreground: var(--ink-900);
+}
+
+/* Public-site display font — use Inter or Space Grotesk for headlines */
+.font-display {
+  font-family: var(--font-space-grotesk), var(--font-inter), system-ui, sans-serif;
+}
+
+body {
+  color: var(--foreground);
+  background-color: var(--background);
+  font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scroll-reveal system for the public site (design.md §A.1).
+   Elements start hidden until <Reveal /> reserves space and adds .revealed. */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+  will-change: opacity, transform;
+}
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Eye outline draw (design.md §4.2) — used by RetinaScanner's inline SVG */
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.scanner-draw {
+  stroke-dasharray: 480;
+  stroke-dashoffset: 480;
+  animation: draw var(--draw-ms, 1.2s) ease-out forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .scanner-draw {
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+}
+
+/* ── CSS 3D depth (design visual upgrade — no WebGL) ──────────────────────── */
+/* Gives a slight 3D tilt. Used on hero retina, bento card visuals, etc. */
+.tilt-3d {
+  transform: perspective(1100px) rotateX(4deg) rotateY(-6deg);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.tilt-3d.tilt-3d-flat {
+  transform: none;
+}
+
+/* A 3D "card plane" that pops toward the viewer on hover. */
+.card-plane {
+  transform: perspective(1100px) translateZ(0);
+  transform-style: preserve-3d;
+  transition: transform 0.4s ease;
+}
+.card-plane:hover {
+  transform: perspective(1100px) rotateX(2deg) rotateY(-2deg) translateZ(18px);
+}
+.card-plane > * {
+  transform: translateZ(12px);
+}
+
+/* Soft layered shadow used under tilted/floating media. */
+.depth-shadow {
+  box-shadow:
+    0 4px 6px -2px rgba(7, 26, 43, 0.10),
+    0 16px 32px -12px rgba(7, 26, 43, 0.35),
+    0 40px 80px -24px rgba(7, 26, 43, 0.35);
+}
+
+/* Warm editorial section background (#EAF4F1 secondary). */
+.bg-warm-mint {
+  background-color: #eaf4f1;
+}
+
+/* Subtle floating animation for 3D-ish hero objects. */
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float-slow {
+  animation: float-slow 6s ease-in-out infinite;
+}
+
+/* Image treatment: dark gradient scrim so type stays readable over photos. */
+.img-scrim {
+  position: relative;
+}
+.img-scrim::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(7, 26, 43, 0.05) 0%, rgba(7, 26, 43, 0.75) 100%);
+  pointer-events: none;
+}
+
+/* Custom Print Styles for Reports */
+@media print {
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .page-break {
+    page-break-before: always;
+  }
+}

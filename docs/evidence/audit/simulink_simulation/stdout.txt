@@ -1,0 +1,23 @@
+=== SIMULINK SIMULATION ATTEMPT ===
+Date: 2026-09-23
+
+Attempt 1: FixedStepDiscrete, StepSize=1, StopTime=100
+  RESULT: ERROR -- "Invalid setting for fixed-step size (1.0).
+  All sample times must be an integer multiple of the fixed-step size."
+  REASON: UniformRandomNumber block has sample time not compatible with
+  fixed-step discrete solver.
+
+Attempt 2: VariableStepAuto, StopTime=100
+  RESULT: SUCCESS -- simulation completed without error.
+  tout length: 1001 timesteps (0.0 to 100.0)
+  yout: NOT PRESENT (no output signals logged)
+  logsout: NOT PRESENT (no logged signals)
+  
+  The model executes but produces zero observable output.
+  No entities are generated, routed, queued, or processed.
+  No statistics are collected beyond the Scope block's display.
+
+=== VERDICT ===
+SCAFFOLD -- executes without error but produces nothing measurable.
+This is not a functioning discrete-event simulation. It is a placeholder
+that confirms the block diagram is syntactically valid and connected.

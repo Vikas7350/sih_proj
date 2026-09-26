@@ -1,0 +1,19 @@
+--------------------------------------------------------------------------------------
+MATLAB Version: 26.1.0.3346908 (R2026a) Update 5
+MATLAB License Number: 40737736
+Operating System: Microsoft Windows 11 Home Single Language Version 10.0 (Build 26200)
+Java Version: Java is not loaded
+--------------------------------------------------------------------------------------
+MATLAB                                                Version 26.1        (R2026a)
+Simulink                                              Version 26.1        (R2026a)
+Computer Vision Toolbox                               Version 26.1        (R2026a)
+Deep Learning Toolbox                                 Version 26.1        (R2026a)
+GPU Coder                                             Version 26.1        (R2026a)
+Image Acquisition Toolbox                             Version 26.1        (R2026a)
+Image Processing Toolbox                              Version 26.1        (R2026a)
+MATLAB Coder                                          Version 26.1        (R2026a)
+Medical Imaging Toolbox                               Version 26.1        (R2026a)
+Parallel Computing Toolbox                            Version 26.1        (R2026a)
+SimEvents                                             Version 26.1        (R2026a)
+Simulink Coder                                        Version 26.1        (R2026a)
+Statistics and Machine Learning Toolbox               Version 26.1        (R2026a)

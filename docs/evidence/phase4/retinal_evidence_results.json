@@ -1,0 +1,83 @@
+{
+  "generated": "2026-09-23 19:37:14",
+  "pipeline_evidence_payloads": [
+    {
+      "fixture": "SCR-0062.jpg",
+      "evidence_status": "SUCCESS",
+      "retinal_analysis_empty": true,
+      "processing_time_seconds": 0.0991418,
+      "has_disclaimer": true
+    },
+    {
+      "fixture": "SCR-0044.jpg",
+      "evidence_status": "SUCCESS",
+      "retinal_analysis_empty": false,
+      "processing_time_seconds": 65.9091338,
+      "has_disclaimer": true
+    }
+  ],
+  "island_direct_runs": [
+    {
+      "fixture": "SCR-0062.jpg",
+      "image_size_hw": [
+        421,
+        475
+      ],
+      "elapsed_seconds": 0.0817,
+      "summary_status": "INSUFFICIENT",
+      "island_quality_status": "INSUFFICIENT",
+      "island_quality_metrics": {
+        "width": 475,
+        "height": 421,
+        "brightness": 57.876,
+        "contrast": 38.605,
+        "sharpness": 181.795,
+        "fundus_visibility": 0.7894
+      },
+      "retinal_analysis_empty": true,
+      "retinal_analysis_keys": [],
+      "detector_outputs": {},
+      "early_return_triggered": true,
+      "root_cause": "SCR-0062.jpg is 475x421; island gate defaultRetinalConfig minWidth=640 minHeight=480 (minWidth check fails at width=475<640 or minHeight 421<480) -> quality INSUFFICIENT -> runRetinalAnalysis.m:28-34 early return with retinal_analysis=struct() (encodes {})."
+    },
+    {
+      "fixture": "SCR-0044.jpg",
+      "image_size_hw": [
+        1920,
+        1920
+      ],
+      "elapsed_seconds": 77.3867,
+      "summary_status": "SUCCESS",
+      "island_quality_status": "ENHANCE",
+      "island_quality_metrics": {
+        "width": 1920,
+        "height": 1920,
+        "brightness": 80.606,
+        "contrast": 53.602,
+        "sharpness": 35.888,
+        "fundus_visibility": 0.7428
+      },
+      "retinal_analysis_empty": false,
+      "retinal_analysis_keys": [
+        "optic_disc",
+        "fovea",
+        "vessels",
+        "microaneurysm",
+        "exudates",
+        "hemorrhage",
+        "neovascularization"
+      ],
+      "detector_outputs": {
+        "optic_disc_found": false,
+        "vessel_density": 0.95299546983506944,
+        "microaneurysm_candidates": 2329,
+        "exudate_candidates": 30,
+        "hemorrhage_candidates": 4889,
+        "neovasc_indicator": "research_prototype"
+      },
+      "early_return_triggered": false,
+      "root_cause": "SCR-0044.jpg island quality=ENHANCE; early-return path not taken."
+    }
+  ],
+  "payload_status_note": "runPipeline.m:354 sets evidence.status=SUCCESS whenever runRetinalAnalysis returns without throwing; it does not forward summary.status. Empty retinal_analysis + SUCCESS means the island early-returned on its own quality gate (runRetinalAnalysis.m:28-34), not that detectors ran and found nothing. Detector claims remain candidate/heuristic wording per detector source comments."
+}

@@ -1,0 +1,1 @@
+matlab -batch "cd('D:/SIH/2026/new netracare/Matlab'); [j] = runPipeline('D:/SIH/2026/new netracare/backend/app/model/hello.png','STEPB-TEST'); disp(j);"

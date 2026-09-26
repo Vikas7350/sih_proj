@@ -1,0 +1,17 @@
+=== MATLAB LICENSE CHECK ===
+Command: license('test','SIMEVENTS') etc.
+Date: 2026-09-23
+
+SIMEVENTS: 1 (TRUE)
+Image_Processing_Toolbox: 1 (TRUE)
+Computer_Vision_Toolbox: 0 (FALSE) -- NOTE: ver shows installed but license denied
+Deep_Learning_Toolbox: 1 (TRUE)
+Medical_Imaging_Toolbox: 1 (TRUE)
+Statistics_Toolbox: 1 (TRUE)
+
+NOTE: Computer Vision Toolbox files are present (ver lists it) but
+license('test','Video_Toolbox') returns 0. This means the toolbox
+binaries are installed but the license does not cover it. This may
+affect any code that directly calls Computer Vision Toolbox functions
+(e.g., detectSURFFeatures, vision.PointTracker). The pipeline code
+should be checked for CV Toolbox dependencies.

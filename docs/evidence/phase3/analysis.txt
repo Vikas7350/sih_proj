@@ -1,0 +1,47 @@
+PHASE 3 — MATLAB -> FastAPI ANALYZE INTEGRATION (runtime evidence)
+Date: 2026-09-23
+Script: backend/scripts/phase3_live_verify.py (temporary, removed after run)
+Evidence: integration_summary.json (this directory)
+
+The FastAPI /analyze endpoint already invoked MATLAB runPipeline.m (live path).
+This phase corrected the backend status/action mapping to the REAL MATLAB
+action vocabulary emitted by runPipeline.m (docs/contract.md): SPECIALIST
+REFERRAL (referable grade >= 2) and "REJECT / HUMAN REVIEW" (UNCERTAIN) were
+previously unmapped (SPECIALIST REFERRAL fell through to status "failed").
+Phase-0 gate logic was NOT weakened: NON_FUNDUS remains a hard reject and
+never reaches inference.
+
+Live verification (real MATLAB subprocess through TestClient):
+
+CASE A - SCR-0062.jpg (genuine fundus)
+  HTTP 200, status=completed, stage=STAGE_3_DR_INFERENCE
+  action=SPECIALIST REFERRAL, decision=review, referable=true
+  prediction grade=4 "Proliferative DR"
+  confidence.raw=0.9338  (NOT the 0.2 uniform placeholder)
+  quality=GOOD (focus 0.768, illumination 0.793, contrast 0.69, FOV 0.896)
+  Grad-CAM: matlab_result.xai.gradcam_path exists, 133,699 bytes
+  heatmap_url /storage/heatmaps/SCR-0001.png signed; GET 200, 133,699 bytes
+  evidence: status=SUCCESS, processing 0.30s, candidate disclaimer present
+    (retinal_analysis body is {} — the STEP C island runs but yields no
+     candidate lesions; no fabricated pathology)
+  Contract: all 16 keys present, none missing
+  model_version=EfficientNet-B0-APTOS-v1, pipeline_version=0.1.0-parity
+
+CASE B - SCR-0002.jpg (genuine non-fundus)
+  HTTP 200, status=rejected, stage=STAGE_0_FUNDUS_VALIDATION
+  action=REJECT, decision=reject, fundus_status=NON_FUNDUS
+  prediction absent, xai.gradcam_path == "" (no inference, no heatmap)
+
+All 17 automated checks PASSED (checks dict in integration_summary.json).
+
+Error handling (pytest, MATLAB stubbed to raise):
+  - missing image -> 400 NO_IMAGE
+  - unknown screening id -> 404 SCREENING_NOT_FOUND
+  - MatlabExecutionTimeoutError -> 504 AI_SERVICE_TIMEOUT, stored status "failed",
+    stored prediction None (never a fake prediction)
+  - MatlabExecutionError -> 502 AI_SERVICE_ERROR, stored status "failed",
+    stored prediction None
+
+Clinical validation: NOT VALIDATED. No labelled APTOS data in workspace.
+Confidence 0.9338 / grade 4 is a model output, not a confirmed diagnosis.
+TIMEOUT BUDGET FIX (2026-09-23): full-suite run observed one fundus analyze call exceed 180s (MATLAB_TIMEOUT_SECONDS default). TIMEOUT handling was correct (504, status='failed', prediction=None) but budget had <50% headroom over real 90-150s calls. Default raised 180 -> 300s in app/core/config.py (env-overridable). Classified PRODUCTION BUG (flaky budget), fixed in config, not by weakening tests.

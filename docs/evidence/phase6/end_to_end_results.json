@@ -1,0 +1,94 @@
+{
+  "valid_normal_fundus": {
+    "fixture": "SCR-0044.jpg",
+    "screening_id": "SCR-0002",
+    "api_status_code": 200,
+    "runtime_seconds": 193.159,
+    "stage": "STAGE_3_DR_INFERENCE",
+    "status": "completed",
+    "action": "PROCEED",
+    "decision": "proceed",
+    "prediction": {
+      "grade": 0,
+      "label": "No DR",
+      "description": "No observable signs of diabetic retinopathy in this fundus image.",
+      "confidence": 0.996,
+      "calibrated_confidence": null
+    },
+    "confidence": {
+      "raw": 0.996,
+      "calibrated": []
+    },
+    "referable": false,
+    "quality_status": "GOOD",
+    "has_retinal_evidence": true,
+    "has_gradcam": true,
+    "persisted_correctly": true,
+    "pass": true
+  },
+  "negative_non_fundus": {
+    "fixture": "SCR-0002.jpg",
+    "screening_id": "SCR-0003",
+    "api_status_code": 200,
+    "runtime_seconds": 19.624,
+    "stage": "STAGE_0_FUNDUS_VALIDATION",
+    "status": "rejected",
+    "action": "REJECT",
+    "decision": "reject",
+    "fundus_status": "NON_FUNDUS",
+    "prediction_absent": true,
+    "gradcam_absent": true,
+    "persisted_correctly": true,
+    "pass": true
+  },
+  "uncertain_human_review": {
+    "fixture": "SCR-0050.jpg",
+    "screening_id": "SCR-0004",
+    "api_status_code": 200,
+    "runtime_seconds": 19.641,
+    "stage": "STAGE_0_FUNDUS_VALIDATION",
+    "status": "pending",
+    "action": "REJECT / HUMAN REVIEW",
+    "decision": "review",
+    "fundus_status": "UNCERTAIN",
+    "referable": true,
+    "prediction_absent": true,
+    "persisted_correctly": true,
+    "pass": true
+  },
+  "referable_pdr_case": {
+    "fixture": "SCR-0062.jpg",
+    "screening_id": "SCR-0005",
+    "api_status_code": 200,
+    "runtime_seconds": 56.555,
+    "stage": "STAGE_3_DR_INFERENCE",
+    "status": "completed",
+    "action": "SPECIALIST REFERRAL",
+    "decision": "review",
+    "prediction": {
+      "grade": 4,
+      "label": "Proliferative DR",
+      "description": "Advanced proliferative diabetic retinopathy with neovascularization.",
+      "confidence": 0.9338,
+      "calibrated_confidence": null
+    },
+    "confidence": {
+      "raw": 0.9338,
+      "calibrated": []
+    },
+    "referable": true,
+    "quality_status": "GOOD",
+    "evidence_summary": {
+      "neovascularization": null,
+      "hemorrhage": null,
+      "microaneurysm": null
+    },
+    "gradcam_validation": {
+      "url": "/storage/heatmaps/SCR-0005.png?exp=1790822450&sig=4996335d565d8051",
+      "http_status": 200,
+      "byte_size": 133699,
+      "valid_png": true
+    },
+    "pass": true
+  }
+}

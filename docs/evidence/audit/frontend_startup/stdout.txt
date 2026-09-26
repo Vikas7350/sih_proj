@@ -1,0 +1,19 @@
+
+> starter-hack@0.1.0 dev
+> next dev
+
+   ▲ Next.js 15.5.23
+   - Local:        http://localhost:3002
+   - Network:      http://192.168.56.1:3002
+   - Environments: .env.local
+   - Experiments (use with caution):
+     · proxyTimeout: 120000
+
+ ✓ Starting...
+ ✓ Ready in 2.9s
+ ○ Compiling / ...
+ GET / 500 in 9873ms
+ GET / 500 in 46ms
+ GET / 500 in 35ms
+ GET / 500 in 24ms
+ POST /api/auth/login 500 in 26ms

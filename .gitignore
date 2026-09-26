@@ -1,0 +1,80 @@
+# ==============================================================================
+# RentoAI / NetraCare - Root .gitignore
+# ==============================================================================
+
+# Python
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+backend/venv/
+backend/.venv/
+
+# Node
+node_modules/
+frontend/node_modules/
+.next/
+frontend/.next/
+out/
+frontend/out/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+!backend/.env.example
+!frontend/.env.example
+
+# Generated results
+model_new/results/
+Matlab/data/results/*
+!Matlab/data/results/.gitkeep
+!Matlab/data/results/python_parity_reference.json
+backend/storage/uploads/*
+!backend/storage/uploads/.gitkeep
+backend/storage/heatmaps/*
+!backend/storage/heatmaps/.gitkeep
+backend/storage/retinal_evidence/*
+!backend/storage/retinal_evidence/.gitkeep
+
+# Old project backup
+model_old/
+
+# Simulink generated files
+**/slprj/
+*.slxc
+
+# Backup archives
+*.zip
+backend/*.zip
+frontend/*.zip
+
+# OS & Editor Files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Large audit log dumps
+docs/evidence/audit/matlab_pipeline_invalid/stdout.txt
+docs/evidence/audit/matlab_pipeline_invalid/stderr.txt
+
+# NVIDIA examples not required by NetraCare
+model_new/DeepLearningExamples/CUDA-Optimized/
+model_new/DeepLearningExamples/DGLPyTorch/
+model_new/DeepLearningExamples/FasterTransformer/
+model_new/DeepLearningExamples/JAX/
+model_new/DeepLearningExamples/Kaldi/
+model_new/DeepLearningExamples/MxNet/
+model_new/DeepLearningExamples/PaddlePaddle/
+model_new/DeepLearningExamples/TensorFlow/
+model_new/DeepLearningExamples/TensorFlow2/
+model_new/DeepLearningExamples/Tools/
+model_new/DeepLearningExamples/PyTorch/LanguageModeling/

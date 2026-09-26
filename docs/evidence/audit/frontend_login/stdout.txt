@@ -1,0 +1,33 @@
+=== FRONTEND MODULE-IMPORT ANALYSIS ===
+Date: 2026-09-23
+Method: grep for '@/lib/' across frontend *.ts/*.tsx
+
+COUNT: 61 import statements across ~30 files referencing @/lib/ modules.
+The 'lib/' directory DOES NOT EXIST at frontend/lib/ (verified Test-Path).
+'node_modules' was freshly installed (421 packages) — this is NOT a
+missing-dependency issue; the source tree itself is incomplete.
+
+Distinct missing module paths (extrapolated from imports):
+  @/lib/hooks/useInView
+  @/lib/hooks/useDebouncedValue
+  @/lib/auth/session
+  @/lib/auth/token
+  @/lib/validations
+  @/lib/utils
+  @/lib/backend-proxy
+  @/lib/api/backendClient
+  @/lib/api/patients
+  @/lib/api/screening
+  @/lib/api/phc
+  @/lib/api/reports
+  @/lib/api/types
+
+Root page compile error observed at runtime: 500 Module not found:
+'@/lib/hooks/useInView'. Every route that imports from these modules
+(login, register, forgot/reset password, dashboard, patients, screenings,
+reports, onboarding, API route handlers, middleware) is equally blocked.
+
+=== VERDICT ===
+The frontend UI workflow (login -> patient -> screening -> result) is
+BLOCKED at compile time by the missing lib/ tree. This is a confirmed
+findable that prevents ANY UI interaction, not just specific features.

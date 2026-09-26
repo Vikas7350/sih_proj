@@ -1,0 +1,1 @@
+cd('D:/SIH/2026/new netracare/model/matlab/'); try, result = runRetinalAnalysis('D:/SIH/2026/new netracare/model/data/train_images/synthetic_test.png', 'AUDIT-RETINAL-TEST'); disp(result); catch ME, disp(['ERROR: ' ME.identifier ' - ' ME.message]); for i=1:length(ME.stack), disp(['  ' ME.stack(i).file ':' num2str(ME.stack(i).line)]); end; end

@@ -1,0 +1,38 @@
+=== MODEL ARTIFACT CHECK ===
+Date: 2026-09-23
+Method: Direct filesystem inspection (NOT assuming documentation is correct)
+
+--- Matlab/model/ (where loadModel.m expects weights) ---
+Files present:
+  loadModel.m        (3068 bytes)
+  pil_bilinear_resize.m (5568 bytes)
+  predictDR.m        (5277 bytes)
+  
+  netracare_efficientnet_b0.onnx  NOT PRESENT
+  netracare_efficientnet_b0.mat   NOT PRESENT
+
+--- model/checkpoints/ ---
+  best_model.pth              48,648,101 bytes (48.6 MB) -- PRESENT
+  nvidia_efficientnet-b0_210412.pth  21,452,055 bytes (21.5 MB) -- PRESENT (confirmed earlier)
+
+--- backend/app/model/checkpoints/ ---
+  Directory does NOT exist.
+
+--- Repo-wide .onnx search ---
+  ZERO .onnx files found anywhere in the repository.
+
+--- Repo-wide .mat search ---
+  ZERO .mat files found anywhere in the repository (excluding .m files).
+
+--- .gitignore confirmation ---
+  *.onnx and *.mat are explicitly gitignored.
+  Comments in .gitignore reference:
+    Matlab/model/netracare_efficientnet_b0.mat (~17.5 MB)
+    Matlab/model/netracare_efficientnet_b0.onnx (~16.0 MB)
+
+=== VERDICT ===
+Python-side model weights: CONFIRMED PRESENT (best_model.pth + backbone)
+MATLAB-side model weights: BLOCKED -- .onnx/.mat conversion output 
+  is gitignored and NOT present in the repo. Whether this conversion 
+  has ever been run locally is unknown. The MATLAB pipeline will fall 
+  through to loadModel.m's placeholder branch (uniform probabilities).

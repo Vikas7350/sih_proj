@@ -1,0 +1,17 @@
+fastapi
+uvicorn[standard]
+pydantic
+pymongo
+python-multipart
+opencv-python-headless
+numpy
+pillow
+python-dotenv
+aiofiles
+httpx
+pytest
+passlib[bcrypt]
+bcrypt==4.0.1  # passlib 1.7.4 incompatible with bcrypt>=4.1 (removed __about__)
+python-jose[cryptography]
+torch
+torchvision

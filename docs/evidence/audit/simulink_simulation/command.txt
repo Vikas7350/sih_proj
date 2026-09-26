@@ -1,0 +1,24 @@
+load_system('D:/SIH/2026/new netracare/model/telemedicine_screening_system.slx');
+set_param('telemedicine_screening_system', 'StopTime', '100');
+set_param('telemedicine_screening_system', 'Solver', 'FixedStepDiscrete');
+set_param('telemedicine_screening_system', 'FixedStep', '1');
+fprintf('Attempting sim for 100 steps (FixedStepDiscrete)...\n');
+try
+    simOut = sim('telemedicine_screening_system', 'ReturnWorkspaceOutputs', 'on');
+    fprintf('Simulation completed.\n');
+    % Check what signals exist
+    whoResult = whos('simOut');
+    fprintf('simOut fields: %s\n', mat2str(fieldnames(simOut)));
+    logsout = simOut.logsout;
+    if ~isempty(logsout)
+        fprintf('logsout has %d elements\n', logsout.numElements);
+    else
+        fprintf('logsout is empty\n');
+    end
+catch ME
+    fprintf('Simulation ERROR: %s\n', ME.message);
+    for i=1:length(ME.stack)
+        fprintf('  %s:%d\n', ME.stack(i).file, ME.stack(i).line);
+    end
+end
+close_system('telemedicine_screening_system', 0);

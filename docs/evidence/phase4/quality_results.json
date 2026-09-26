@@ -1,0 +1,170 @@
+{
+  "generated": "2026-09-23 19:37:14",
+  "source": "Matlab/quality/assessQuality.m (Stage 1)",
+  "fixtures": [
+    {
+      "image": "SCR-0062.jpg",
+      "status": "GOOD",
+      "overallScore": 0.7801,
+      "scores": {
+        "focus": 0.7676,
+        "illumination": 0.7927,
+        "contrast": 0.69,
+        "field_of_view": 0.8957,
+        "FOV": 0.8957,
+        "blur": 0.2324,
+        "overall": 0.7801
+      },
+      "reasons": [
+        "Image quality is sufficient for clinical AI evaluation"
+      ]
+    },
+    {
+      "image": "SCR-0044.jpg",
+      "status": "GOOD",
+      "overallScore": 0.8117,
+      "scores": {
+        "focus": 0.7235,
+        "illumination": 0.9351,
+        "contrast": 0.73,
+        "field_of_view": 0.8921,
+        "FOV": 0.8921,
+        "blur": 0.2765,
+        "overall": 0.8117
+      },
+      "reasons": [
+        "Image quality is sufficient for clinical AI evaluation"
+      ]
+    },
+    {
+      "image": "SCR-0050.jpg",
+      "status": "GOOD",
+      "overallScore": 0.6519,
+      "scores": {
+        "focus": 0.2992,
+        "illumination": 0.8703,
+        "contrast": 0.7375,
+        "field_of_view": 0.8009,
+        "FOV": 0.8009,
+        "blur": 0.7008,
+        "overall": 0.6519
+      },
+      "reasons": [
+        "Moderate blur detected"
+      ]
+    },
+    {
+      "image": "SCR-0001.jpg",
+      "status": "UNGRADABLE",
+      "overallScore": 0.3708,
+      "scores": {
+        "focus": 0.0113,
+        "illumination": 0.6788,
+        "contrast": 0.2267,
+        "field_of_view": 0.7054,
+        "FOV": 0.7054,
+        "blur": 0.9887,
+        "overall": 0.3708
+      },
+      "reasons": [
+        "Severe optical blur / loss of focus",
+        "Suboptimal retinal contrast",
+        "Partial aperture clipping (45.3% visible)"
+      ]
+    },
+    {
+      "image": "SCR-0002.jpg",
+      "status": "UNGRADABLE",
+      "overallScore": 0.3324,
+      "scores": {
+        "focus": 0.0504,
+        "illumination": 0.8549,
+        "contrast": 0,
+        "field_of_view": 0.5176,
+        "FOV": 0.5176,
+        "blur": 0.9496,
+        "overall": 0.3324
+      },
+      "reasons": [
+        "Severe optical blur / loss of focus",
+        "Critically low dynamic range / flat contrast",
+        "Partial aperture clipping (35.9% visible)"
+      ]
+    },
+    {
+      "image": "SCR-0003.jpg",
+      "status": "GOOD",
+      "overallScore": 0.8683,
+      "scores": {
+        "focus": 1,
+        "illumination": 0.939,
+        "contrast": 0.67,
+        "field_of_view": 0.8302,
+        "FOV": 0.8302,
+        "blur": 0,
+        "overall": 0.8683
+      },
+      "reasons": [
+        "Image quality is sufficient for clinical AI evaluation"
+      ]
+    },
+    {
+      "image": "SCR-0004.jpg",
+      "status": "GOOD",
+      "overallScore": 0.8626,
+      "scores": {
+        "focus": 1,
+        "illumination": 0.4505,
+        "contrast": 1,
+        "field_of_view": 1,
+        "FOV": 1,
+        "blur": 0,
+        "overall": 0.8626
+      },
+      "reasons": [
+        "Overexposed / saturated highlights (saturation=24.4%)"
+      ]
+    },
+    {
+      "image": "SCR-0055.jpg",
+      "status": "GOOD",
+      "overallScore": 0.8479,
+      "scores": {
+        "focus": 1,
+        "illumination": 0.7344,
+        "contrast": 0.7225,
+        "field_of_view": 0.9185,
+        "FOV": 0.9185,
+        "blur": 0,
+        "overall": 0.8479
+      },
+      "reasons": [
+        "Image quality is sufficient for clinical AI evaluation"
+      ]
+    },
+    {
+      "image": "SCR-0066.jpg",
+      "status": "UNGRADABLE",
+      "overallScore": 0.7847,
+      "scores": {
+        "focus": 1,
+        "illumination": 0.3137,
+        "contrast": 0.825,
+        "field_of_view": 1,
+        "FOV": 1,
+        "blur": 0,
+        "overall": 0.7847
+      },
+      "reasons": [
+        "Overexposed / saturated highlights (saturation=56.1%)",
+        "Severe highlight saturation (>25% of retina clipped)"
+      ]
+    }
+  ],
+  "synthetic_checks": {
+    "black_image_quality_status": "UNGRADABLE",
+    "black_image_acceptable": false,
+    "black_image_enhance_applied": false,
+    "note": "Synthetic degenerate inputs only (code-path proof); no fabricated clinical/borderline fixture exists in repo."
+  }
+}

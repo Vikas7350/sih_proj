@@ -1,0 +1,40 @@
+=== MATLAB PIPELINE — INVALID/NON-FUNDUS IMAGE TEST ===
+Date: 2026-09-23
+
+TEST 1: hello.png (backend/app/model/hello.png, 14.9KB)
+RESULT: ERROR (MATLAB:imagesci:imread:fileFormat)
+  "File format 'png' is not supported."
+  at runPipeline.m:76 -> checkFundusImage -> imread
+  NOTE: The synthetic_test.png DID load via imread later, so this is
+  likely a specific corruption/encoding issue with hello.png, not a
+  general PNG failure. Needs investigation if hello.png is intended to
+  be a valid test artifact.
+
+TEST 2: phc_hero.jpg (frontend/public/images/phc_hero.jpg, 868KB)
+RESULT: SUCCESS — pipeline executed and CORRECTLY REJECTED as NON_FUNDUS
+  stage: STAGE_0_FUNDUS_VALIDATION, status: NON_FUNDUS, action: REJECT
+  decision: reject, fundus.isFundus: false, fundus.score: 0.5464
+  reason: "Achromatic / grayscale content (lacks retinal chromophores)"
+  feature scores: color=0.0871(invalid), border=0.281, parenchyma=1.0,
+                  vessels=1.0, confidence=0.7
+
+TEST 3: synthetic_test.png (model/data/train_images/synthetic_test.png)
+RESULT: SUCCESS — pipeline executed and CORRECTLY REJECTED as NON_FUNDUS
+  stage: STAGE_0_FUNDUS_VALIDATION, decision: reject
+  reason: "Synthetic featureless flat graphic (zero vessels, zero
+           physiological variance)"
+  Full JSON in stderr.txt (also shows the safety gate rejecting at
+  Stage 0 before any inference/enhancement/Grad-CAM ran).
+
+=== VERDICT ===
+The MATLAB safety gate (Stage 0 fundus validation) WORKS AT RUNTIME.
+It correctly rejects obvious non-fundus inputs (a marketing hero photo
+and a synthetic flat graphic). The pipeline does NOT proceed to
+inference for rejected images. This is the production safety behavior
+the design requires, now verified live.
+
+WHAT COULD NOT BE TESTED:
+- Valid fundus happy-path (no real fundus images on this machine) ->
+  quality/enhancement/inference/Grad-CAM stages not exercised.
+- Grad-CAM generation (requires passing Stage 0 + model weights;
+  both blockers present).

@@ -1,0 +1,65 @@
+{
+  "generated": "2026-09-23 19:37:14",
+  "invocation": "explicit feval per function (runtests discovers 0: tests are function-style, not xunit)",
+  "total": 8,
+  "passed": 8,
+  "failed": 0,
+  "results": [
+    {
+      "name": "testFundusValidation",
+      "passed": true,
+      "elapsed_seconds": 33.19,
+      "error": "",
+      "detail": "ran without exception"
+    },
+    {
+      "name": "testQuality",
+      "passed": true,
+      "elapsed_seconds": 3.37,
+      "error": "",
+      "detail": "ran without exception"
+    },
+    {
+      "name": "testEnhancement",
+      "passed": true,
+      "elapsed_seconds": 2.93,
+      "error": "",
+      "detail": "ran without exception"
+    },
+    {
+      "name": "testParity",
+      "passed": true,
+      "elapsed_seconds": 33.93,
+      "error": "",
+      "detail": "max_diff=1.249e-06"
+    },
+    {
+      "name": "testPipeline",
+      "passed": true,
+      "elapsed_seconds": 24.4,
+      "error": "",
+      "detail": "all_passed=1 (9/9)"
+    },
+    {
+      "name": "testPipelinePhase2",
+      "passed": true,
+      "elapsed_seconds": 19.48,
+      "error": "",
+      "detail": "returned ok=1"
+    },
+    {
+      "name": "testPipelineEndToEnd",
+      "passed": true,
+      "elapsed_seconds": 109.63,
+      "error": "",
+      "detail": "ran without exception"
+    },
+    {
+      "name": "testInferenceReal",
+      "passed": true,
+      "elapsed_seconds": 16.35,
+      "error": "",
+      "detail": "returned ok=1"
+    }
+  ]
+}

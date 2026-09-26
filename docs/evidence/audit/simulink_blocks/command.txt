@@ -1,0 +1,52 @@
+load_system('D:/SIH/2026/new netracare/model/telemedicine_screening_system.slx');
+fprintf('Model: %s\n', get_param('telemedicine_screening_system', 'Name'));
+fprintf('Loaded: OK\n');
+fprintf('Solver: %s\n', get_param('telemedicine_screening_system', 'Solver'));
+fprintf('StopTime: %s\n', get_param('telemedicine_screening_system', 'StopTime'));
+
+% Enumerate top-level blocks
+blocks = find_system('telemedicine_screening_system', 'SearchDepth', 1, 'Type', 'block');
+fprintf('\n=== TOP-LEVEL BLOCKS (%d) ===\n', length(blocks));
+for i = 1:length(blocks)
+    bt = get_param(blocks{i}, 'BlockType');
+    bn = get_param(blocks{i}, 'Name');
+    fprintf('  [%d] %s  "%s"\n', i, bt, bn);
+end
+
+% Enumerate subsystems and their contents
+subs = find_system('telemedicine_screening_system', 'BlockType', 'SubSystem');
+fprintf('\n=== SUBSYSTEMS (%d) ===\n', length(subs));
+for i = 1:length(subs)
+    subName = get_param(subs{i}, 'Name');
+    subBlocks = find_system(subs{i}, 'SearchDepth', 1, 'Type', 'block');
+    fprintf('\n  Subsystem: "%s" (%d blocks)\n', subName, length(subBlocks)-1);
+    for j = 1:length(subBlocks)
+        bt = get_param(subBlocks{j}, 'BlockType');
+        bn = get_param(subBlocks{j}, 'Name');
+        if j == 1 && strcmp(bt, 'SubSystem')
+            continue;  % skip the subsystem itself
+        end
+        fprintf('    [%d] %s  "%s"\n', j-1, bt, bn);
+    end
+end
+
+% Check for SimEvents blocks
+fprintf('\n=== SIMEVENTS BLOCK SEARCH ===\n');
+seBlocks = find_system('telemedicine_screening_system', 'MaskType', 'Entity Generator');
+fprintf('Entity Generator: %d\n', length(seBlocks));
+seBlocks = find_system('telemedicine_screening_system', 'MaskType', 'Entity Queue');
+fprintf('Entity Queue: %d\n', length(seBlocks));
+seBlocks = find_system('telemedicine_screening_system', 'MaskType', 'Entity Server');
+fprintf('Entity Server: %d\n', length(seBlocks));
+seBlocks = find_system('telemedicine_screening_system', 'MaskType', 'Entity Terminator');
+fprintf('Entity Terminator: %d\n', length(seBlocks));
+seBlocks = find_system('telemedicine_screening_system', 'MaskType', 'Entity Gate');
+fprintf('Entity Gate: %d\n', length(seBlocks));
+seBlocks = find_system('telemedicine_screening_system', 'MaskType', 'Resource Pool');
+fprintf('Resource Pool: %d\n', length(seBlocks));
+
+% Also try finding by LibraryLink
+seLinks = find_system('telemedicine_screening_system', 'FindAll', 'on', 'RegExp', 'on', 'Library', 'simevents');
+fprintf('SimEvents library links: %d\n', length(seLinks));
+
+close_system('telemedicine_screening_system', 0);

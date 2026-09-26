@@ -1,0 +1,105 @@
+{
+  "status": "SUCCESS",
+  "image": "D:/SIH/2026/new netracare/model/data/train_images/synthetic_test.png",
+  "quality": {
+    "status": "ENHANCE",
+    "quality_score": 85.2,
+    "metrics": {
+      "width": 800,
+      "height": 600,
+      "brightness": 69.695,
+      "contrast": 60.56,
+      "sharpness": 278.535,
+      "fundus_visibility": 0.4423
+    },
+    "passed": {
+      "resolution": true,
+      "brightness": true,
+      "contrast": true,
+      "sharpness": true,
+      "fundus_visibility": false
+    },
+    "warnings": "Fundus visibility is insufficient."
+  },
+  "enhancement": {
+    "applied": true,
+    "reason": "Conservative illumination, contrast, denoising, and sharpening applied.",
+    "metrics": {
+      "original_brightness": 69.694929166667279,
+      "enhanced_brightness": 136.22048958333326,
+      "original_contrast": 60.559661917165485,
+      "enhanced_contrast": 38.164620069486794,
+      "original_sharpness": 278.53470944731123,
+      "enhanced_sharpness": 975.46163637840721
+    },
+    "enhanced_image": "results\\matlab\\enhanced.png",
+    "original_image": "results\\matlab\\original.png"
+  },
+  "retinal_analysis": {
+    "optic_disc": {
+      "found": false,
+      "center_xy": [
+        null,
+        null
+      ],
+      "radius": null,
+      "bounding_box": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "confidence": 0
+    },
+    "fovea": {
+      "estimated": false,
+      "center_xy": [
+        null,
+        null
+      ],
+      "confidence": 0,
+      "method": "not_available"
+    },
+    "vessels": {
+      "density": 1,
+      "area_percentage": 100,
+      "skeleton_length_pixels": 8163,
+      "features": {
+        "branching_proxy": 156,
+        "tortuosity_proxy": null
+      },
+      "mask_image": "results\\matlab\\vessel_mask.png"
+    },
+    "microaneurysm": {
+      "candidate_count": 0,
+      "locations": [],
+      "method": "dark green-channel candidate analysis",
+      "mask_image": "results\\matlab\\microaneurysm_candidates.png"
+    },
+    "exudates": {
+      "candidate_count": 0,
+      "area_pixels": 0,
+      "locations": [],
+      "method": "bright-region candidate analysis with optic-disc mask",
+      "mask_image": "results\\matlab\\exudate_candidates.png"
+    },
+    "hemorrhage": {
+      "candidate_count": 0,
+      "area_pixels": 0,
+      "locations": [],
+      "method": "dark-red candidate analysis",
+      "mask_image": "results\\matlab\\hemorrhage_candidates.png"
+    },
+    "neovascularization": {
+      "indicator": "research_prototype",
+      "score": 1,
+      "features": {
+        "vessel_density": 1,
+        "branching_proxy": 156,
+        "tortuosity_proxy": null
+      },
+      "warning": "Requires annotated clinical data before diagnostic use."
+    }
+  },
+  "processing_time_seconds": 6.8228267
+}

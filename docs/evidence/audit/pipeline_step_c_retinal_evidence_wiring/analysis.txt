@@ -1,0 +1,11 @@
+=== STEP C — RETINAL EVIDENCE WIRING (mechanism-verified; in-pipeline run blocked on weights+fundus) ===
+Date: 2026-09-23
+Change: runPipeline.m now calls runRetinalEvidence(scriptDir, fundusImg, screeningId) after Stage 3 (contract §6 default placement), populating resultStruct.evidence (was empty placeholder). Helper local function added; island at <repo>/model/matlab.
+Path precedence (Report Risk #1) verified live:
+  - pipeline ctx: which assessQuality -> Matlab/quality/assessQuality.m (canonical, correct)
+  - evidence ctx: addpath(retinalDir) prepend -> model/matlab/assessQuality.m (island's own, correct)
+  - restored after: rmpath -> canonical again
+  - runRetinalAnalysis on synthetic input in pipeline ctx: status=SUCCESS, retinal_analysis present, 6.08s
+Reject path regression check after edit: runPipeline('hello.png') still returns structured UNREADABLE reject -> OK
+mlint: no new errors
+NOTE: the evidence pass only fires on the forward inference path (canInferDR=true). Reject/recapture paths carry evidence={} honestly per contract §4/§6. Full in-pipeline evidence run awaits fundus image + weights (Blocker 1/2).

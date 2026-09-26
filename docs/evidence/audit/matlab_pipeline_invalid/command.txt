@@ -1,0 +1,1 @@
+cd('D:/SIH/2026/new netracare/Matlab/'); [jsonStr, ~] = runPipeline('D:/SIH/2026/new netracare/frontend/public/images/phc_hero.jpg', 'AUDIT-TEST-INVALID-JPG')

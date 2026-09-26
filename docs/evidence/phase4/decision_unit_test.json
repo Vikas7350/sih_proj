@@ -1,0 +1,77 @@
+{
+  "rule": "referable = (grade >= cfg.classes.referral_threshold); referable->review/SPECIALIST REFERRAL, else proceed/PROCEED (predictDR.m:123, runPipeline.m:244-250)",
+  "referral_threshold": 2,
+  "threshold_is_2": true,
+  "live_coverage": [
+    [
+      {
+        "fixture": "SCR-0044.jpg",
+        "grade": 0,
+        "referable": false,
+        "decision": "proceed",
+        "action": "PROCEED",
+        "formula_referable": false,
+        "expected_decision": "proceed",
+        "expected_action": "PROCEED",
+        "consistent": true
+      },
+      {
+        "fixture": "SCR-0062.jpg",
+        "grade": 4,
+        "referable": true,
+        "decision": "review",
+        "action": "SPECIALIST REFERRAL",
+        "formula_referable": true,
+        "expected_decision": "review",
+        "expected_action": "SPECIALIST REFERRAL",
+        "consistent": true
+      }
+    ]
+  ],
+  "predictdr_formula_checks": [
+    [
+      {
+        "fixture": "SCR-0062.jpg",
+        "grade": 4,
+        "predStruct_referable": true,
+        "formula": true,
+        "consistent": true
+      },
+      {
+        "fixture": "SCR-0044.jpg",
+        "grade": 0,
+        "predStruct_referable": false,
+        "formula": false,
+        "consistent": true
+      },
+      {
+        "fixture": "SCR-0050.jpg",
+        "grade": 4,
+        "predStruct_referable": true,
+        "formula": true,
+        "consistent": true
+      }
+    ]
+  ],
+  "grades_not_live_covered": [
+    1,
+    2,
+    3
+  ],
+  "grades_1_2_3_status": "code-verified only (predictDR.m:123 formula); no fixture in repo predicts these grades",
+  "stage0_nonfundus": {
+    "fixture": "SCR-0002.jpg",
+    "decision": "reject",
+    "action": "REJECT",
+    "prediction_absent": true,
+    "consistent": true
+  },
+  "stage0_uncertain": {
+    "fixture": "SCR-0050.jpg",
+    "decision": "review",
+    "action": "REJECT / HUMAN REVIEW",
+    "prediction_absent": true,
+    "consistent": true
+  },
+  "all_consistent": true
+}

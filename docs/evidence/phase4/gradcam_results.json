@@ -1,0 +1,55 @@
+{
+  "generated": "2026-09-23 19:43:12",
+  "layer": "x_features_featu_469",
+  "reduction_layer": "x_classifier_classif",
+  "runs": [
+    {
+      "fixture": "SCR-0062.jpg",
+      "screening_id": "P4-DET-1",
+      "gradcam_path": "D:\\SIH\\2026\\new netracare\\Matlab\\data\\results\\gradcam_d0f17860.png",
+      "exists": true,
+      "bytes": 133699,
+      "width": 475,
+      "height": 421,
+      "format": "png",
+      "overlay_std": 44.407,
+      "note": ""
+    },
+    {
+      "fixture": "SCR-0062.jpg",
+      "screening_id": "P4-DET-2",
+      "gradcam_path": "D:\\SIH\\2026\\new netracare\\Matlab\\data\\results\\gradcam_7a082e53.png",
+      "exists": true,
+      "bytes": 133699,
+      "width": 475,
+      "height": 421,
+      "format": "png",
+      "overlay_std": 44.407,
+      "note": ""
+    },
+    {
+      "fixture": "SCR-0062.jpg",
+      "screening_id": "P4-DET-3",
+      "gradcam_path": "D:\\SIH\\2026\\new netracare\\Matlab\\data\\results\\gradcam_b2bf6194.png",
+      "exists": true,
+      "bytes": 133699,
+      "width": 475,
+      "height": 421,
+      "format": "png",
+      "overlay_std": 44.407,
+      "note": ""
+    },
+    {
+      "fixture": "SCR-0044.jpg",
+      "screening_id": "P4-G0-0044",
+      "gradcam_path": "D:\\SIH\\2026\\new netracare\\Matlab\\data\\results\\gradcam_6e4cdebd.png",
+      "exists": true,
+      "bytes": 2.493247E+6,
+      "width": 1920,
+      "height": 1920,
+      "format": "png",
+      "overlay_std": 50.66,
+      "note": ""
+    }
+  ]
+}

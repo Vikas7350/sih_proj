@@ -1,0 +1,38 @@
+=== STANDALONE RETINAL-EVIDENCE CHECK ===
+Date: 2026-09-23
+Command: cd('model/matlab/'); runRetinalAnalysis('<synthetic_test.png>')
+Image: model/data/train_images/synthetic_test.png (synthetic, not a real fundus)
+Elapsed: 6.82s
+Result: SUCCESS - full JSON output produced (synthetic_test_retinal_analysis.json)
+
+Highlights:
+  quality.status = ENHANCE (score 85.2)
+    - resolution/brightness/contrast/sharpness passed
+    - fundus_visibility FAILED (0.44 < 0.50) -> enhancement triggered
+  enhancement.applied = true
+    - brightness 69.7 -> 136.2, contrast 60.6 -> 38.2, sharpness 278.5 -> 975.5
+  retinal_analysis completed:
+    - optic_disc: found=false, confidence=0 (synthetic image has none)
+    - fovea: not estimated
+    - vessels: density=1, skeleton=8163px, branching_proxy=156
+    - microaneurysm: 0 candidates
+    - exudates: 0 candidates
+    - hemorrhage: 0 candidates
+    - neovascularization: research_prototype, score=1 (self-labeled heuristic)
+  output artifacts written (9 files incl. overlays + masks):
+    enhanced.png, original.png, vessel_mask.png, anatomy_overlay.png,
+    retinal_analysis_overlay.png, microaneurysm_candidates.png,
+    exudate_candidates.png, hemorrhage_candidates.png,
+    synthetic_test_retinal_analysis.json
+
+=== VERDICT ===
+model/matlab/ module EXECUTES STANDALONE. The 13-function island is not
+just code-complete - it RUNS end-to-end on an image and produces all
+expected JSON + visual artifacts (masks, overlays). On a real fundus
+image it should produce meaningful optic-disc/fovea/lesion detections.
+This upgrades the Section 7 status from "prototypes exist, structurally
+unintegrated" toward PARTIALLY VERIFIED STANDALONE.
+
+CAVEAT: synthetic_test.png is not a real fundus, so the negative
+detections (0 lesions, no disc) are expected but NOT proof the
+detectors find real pathology. Real-fundus validation still required.

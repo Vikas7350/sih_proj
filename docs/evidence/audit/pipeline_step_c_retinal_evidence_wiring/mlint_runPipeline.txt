@@ -1,0 +1,8 @@
+MLINT 114:8 
+MLINT 87:104 en checking if a variable is a matrix consider using ISMATRIX.
+MLINT 163:15 
+MLINT 86:97 lue assigned to variable might be unused. Consider replacing the variable with ~ instead.
+MLINT 163:29 $
+MLINT 86:97 lue assigned to variable might be unused. Consider replacing the variable with ~ instead.
+MLINT 227:21 
+MLINT 86:97 lue assigned to variable might be unused. Consider replacing the variable with ~ instead.

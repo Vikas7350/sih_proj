@@ -1,0 +1,112 @@
+{
+  "script": "phase3_live_verify",
+  "date": "2026-09-23",
+  "matlab_executable": "(auto-resolved)",
+  "matlab_root": "(default ../Matlab)",
+  "cases": [
+    {
+      "fixture": "SCR-0062.jpg",
+      "http_status": 200,
+      "elapsed_seconds": 46.5,
+      "expected_status": "completed",
+      "status": "completed",
+      "stage": "STAGE_3_DR_INFERENCE",
+      "action": "SPECIALIST REFERRAL",
+      "decision": "review",
+      "fundus_status": "GOOD"
+    },
+    {
+      "fixture": "SCR-0002.jpg",
+      "http_status": 200,
+      "elapsed_seconds": 18.0,
+      "expected_status": "rejected",
+      "status": "rejected",
+      "stage": "STAGE_0_FUNDUS_VALIDATION",
+      "action": "REJECT",
+      "decision": "reject",
+      "fundus_status": "NON_FUNDUS"
+    }
+  ],
+  "caseA_detail": {
+    "prediction": {
+      "grade": 4,
+      "label": "Proliferative DR"
+    },
+    "confidence": {
+      "raw": 0.9338,
+      "calibrated": []
+    },
+    "quality": {
+      "status": "GOOD",
+      "scores": {
+        "focus": 0.7676,
+        "illumination": 0.7927,
+        "contrast": 0.69,
+        "field_of_view": 0.8957,
+        "FOV": 0.8957,
+        "blur": 0.2324,
+        "overall": 0.7801
+      },
+      "reasons": [
+        "Image quality is sufficient for clinical AI evaluation"
+      ]
+    },
+    "xai": {
+      "gradcam_path": "D:\\SIH\\2026\\new netracare\\Matlab\\data\\results\\gradcam_7f3dc236.png",
+      "exists": true,
+      "bytes": 133699
+    },
+    "heatmap_url": "/storage/heatmaps/SCR-0001.png?exp=1790769858&sig=d9966d4116b1f6f6",
+    "heatmap_served": {
+      "status": 200,
+      "bytes": 133699
+    },
+    "evidence": {
+      "status": "SUCCESS",
+      "retinal_analysis": {},
+      "processing_time_seconds": 0.2965944,
+      "candidate_disclaimer": "Algorithmic candidate evidence is not clinically confirmed pathology."
+    },
+    "model_version": "EfficientNet-B0-APTOS-v1",
+    "pipeline_version": "0.1.0-parity",
+    "contract_keys_present": [
+      "screening_id",
+      "stage",
+      "status",
+      "action",
+      "decision",
+      "fundus",
+      "quality",
+      "enhancement",
+      "prediction",
+      "confidence",
+      "referable",
+      "xai",
+      "evidence",
+      "reasons",
+      "model_version",
+      "pipeline_version"
+    ],
+    "contract_keys_missing": []
+  },
+  "checks": {
+    "caseA_fundus_completed": true,
+    "stage_is_STAGE3": true,
+    "action_specialist_referral": true,
+    "grade4_label": true,
+    "referable_true": true,
+    "confidence_not_placeholder": true,
+    "confidence_0.9338": true,
+    "quality_good": true,
+    "gradcam_created_nonempty": true,
+    "heatmap_served_200_nonempty": true,
+    "contract_fields_present": true,
+    "evidence_present": true,
+    "caseB_nonfundus_rejected": true,
+    "caseB_stage0": true,
+    "caseB_action_REJECT": true,
+    "caseB_no_prediction": true,
+    "caseB_no_gradcam": true
+  },
+  "all_checks_pass": true
+}

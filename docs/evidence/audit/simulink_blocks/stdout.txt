@@ -1,0 +1,45 @@
+=== SIMULINK MODEL BLOCK INVENTORY ===
+Date: 2026-09-23
+Model: model/telemedicine_screening_system.slx
+Method: MATLAB load_system + find_system enumeration
+
+Model Properties:
+  Solver: VariableStepAuto
+  StopTime (default): 36000
+
+TOP-LEVEL BLOCKS (12):
+  [1]  SubSystem     "AI Processing"
+  [2]  UnitDelay     "Buffer"
+  [3]  SubSystem     "Compression"
+  [4]  SubSystem     "Fundus Camera"
+  [5]  SubSystem     "Image Acquisition"
+  [6]  Scope         "Metrics"
+  [7]  SubSystem     "Network"
+  [8]  UniformRandomNumber  "Patient Source"
+  [9]  SubSystem     "Quality Gate"
+  [10] SubSystem     "Risk Routing"
+  [11] SubSystem     "Specialist Queue"
+  [12] SubSystem     "Specialist Review"
+
+BLOCK CLASSIFICATION:
+  Patient Source (UniformRandomNumber): SIGNAL SOURCE -- generates random numbers, NOT SimEvents entities
+  Buffer (UnitDelay): PASS-THROUGH -- single-step delay, no queue semantics
+  Metrics (Scope): VISUALIZATION -- display only, no data collection
+  All 9 SubSystems: EMPTY PASS-THROUGH SHELLS
+    Each contains only Inport -> Outport, zero internal logic
+
+SimEvents Block Count:
+  Entity Generator: 0
+  Entity Queue: 0
+  Entity Server: 0
+  Entity Terminator: 0
+  Entity Gate: 0
+  Resource Pool: 0
+  SimEvents library links: 0
+
+=== VERDICT ===
+This is a VISUAL SCAFFOLD, not a discrete-event simulation.
+It has named blocks that conceptually map to the telemedicine workflow,
+but every subsystem is an empty passthrough. No entities exist. No
+queues, servers, gates, or resource pools exist. The only active blocks
+are a random number source, a unit delay, and a scope.

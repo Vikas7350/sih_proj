@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+pydantic
+opencv-python-headless
+numpy
+pillow
+certifi
+python-dotenv
+pytest
+# NOTE: torch/torchvision are installed by the Render build command from the CPU
+# index (see render.yaml) so the free 512Mi instance never pulls the GPU wheel.

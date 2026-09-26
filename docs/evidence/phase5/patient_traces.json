@@ -1,0 +1,92 @@
+[
+  {
+    "patient_id": "PAT-000001",
+    "arrival_time_seconds": 0,
+    "image_quality": "GOOD",
+    "recapture_count": 0,
+    "dr_grade": 3,
+    "ai_decision": "PDR (G3/G4)",
+    "discrete_event_route": "Specialist Ref"
+  },
+  {
+    "patient_id": "PAT-000002",
+    "arrival_time_seconds": 450,
+    "image_quality": "GOOD",
+    "recapture_count": 0,
+    "dr_grade": 0,
+    "ai_decision": "NO_DR (G0)",
+    "discrete_event_route": "Auto-Approve"
+  },
+  {
+    "patient_id": "PAT-000003",
+    "arrival_time_seconds": 900,
+    "image_quality": "GOOD",
+    "recapture_count": 0,
+    "dr_grade": 0,
+    "ai_decision": "NO_DR (G0)",
+    "discrete_event_route": "Auto-Approve"
+  },
+  {
+    "patient_id": "PAT-000004",
+    "arrival_time_seconds": 1350,
+    "image_quality": "GOOD",
+    "recapture_count": 0,
+    "dr_grade": 2,
+    "ai_decision": "MOD_DR (G2)",
+    "discrete_event_route": "Human Review"
+  },
+  {
+    "patient_id": "PAT-000005",
+    "arrival_time_seconds": 1800,
+    "image_quality": "GOOD",
+    "recapture_count": 0,
+    "dr_grade": 1,
+    "ai_decision": "MILD_DR (G1)",
+    "discrete_event_route": "Auto-Approve"
+  },
+  {
+    "patient_id": "PAT-000006",
+    "arrival_time_seconds": 2250,
+    "image_quality": "GOOD",
+    "recapture_count": 0,
+    "dr_grade": 3,
+    "ai_decision": "PDR (G3/G4)",
+    "discrete_event_route": "Specialist Ref"
+  },
+  {
+    "patient_id": "PAT-000007",
+    "arrival_time_seconds": 2700,
+    "image_quality": "BORDERLINE",
+    "recapture_count": 0,
+    "dr_grade": 0,
+    "ai_decision": "NO_DR (G0)",
+    "discrete_event_route": "Auto-Approve"
+  },
+  {
+    "patient_id": "PAT-000008",
+    "arrival_time_seconds": 3150,
+    "image_quality": "GOOD",
+    "recapture_count": 0,
+    "dr_grade": 0,
+    "ai_decision": "NO_DR (G0)",
+    "discrete_event_route": "Auto-Approve"
+  },
+  {
+    "patient_id": "PAT-000009",
+    "arrival_time_seconds": 3600,
+    "image_quality": "GOOD",
+    "recapture_count": 0,
+    "dr_grade": 0,
+    "ai_decision": "NO_DR (G0)",
+    "discrete_event_route": "Auto-Approve"
+  },
+  {
+    "patient_id": "PAT-000010",
+    "arrival_time_seconds": 4050,
+    "image_quality": "GOOD",
+    "recapture_count": 0,
+    "dr_grade": 0,
+    "ai_decision": "NO_DR (G0)",
+    "discrete_event_route": "Auto-Approve"
+  }
+]

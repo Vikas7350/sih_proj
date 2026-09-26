@@ -1,0 +1,147 @@
+{
+  "_comment": "Single schema for the LOCAL MongoDB database 'dr_screening'. Each key is a collection validator (MongoDB $jsonSchema). Derived from backend/app/features/** code.",
+  "users": {
+    "$jsonSchema": {
+      "bsonType": "object",
+      "required": ["name", "email", "password_hash", "provider", "role", "phc_id", "is_verified", "created_at"],
+      "properties": {
+        "_id": { "bsonType": "objectId" },
+        "name": { "bsonType": "string" },
+        "email": { "bsonType": "string" },
+        "password_hash": { "bsonType": "string" },
+        "provider": { "enum": ["credentials", "google"] },
+        "role": { "enum": ["phc_staff"] },
+        "phc_id": { "anyOf": [{ "bsonType": "objectId" }, { "bsonType": "null" }] },
+        "is_verified": { "bsonType": "bool" },
+        "created_at": { "bsonType": "string" }
+      }
+    }
+  },
+  "phcs": {
+    "$jsonSchema": {
+      "bsonType": "object",
+      "required": ["name", "code", "state", "district", "address", "contact_number", "healthcare_worker_name", "created_at"],
+      "properties": {
+        "_id": { "bsonType": "objectId" },
+        "name": { "bsonType": "string" },
+        "code": { "bsonType": "string" },
+        "state": { "bsonType": "string" },
+        "district": { "bsonType": "string" },
+        "address": { "bsonType": "string" },
+        "contact_number": { "bsonType": "string" },
+        "healthcare_worker_name": { "bsonType": "string" },
+        "created_at": { "bsonType": "string" }
+      }
+    }
+  },
+  "otps": {
+    "$jsonSchema": {
+      "bsonType": "object",
+      "required": ["email", "otp_hash", "purpose", "expires_at", "attempts", "last_sent_at"],
+      "properties": {
+        "_id": { "bsonType": "objectId" },
+        "email": { "bsonType": "string" },
+        "otp_hash": { "bsonType": "string" },
+        "purpose": { "enum": ["register", "reset_password", "email_verification", "password_reset"] },
+        "expires_at": { "bsonType": "date" },
+        "attempts": { "bsonType": "int", "minimum": 0, "maximum": 5 },
+        "last_sent_at": { "bsonType": "date" }
+      }
+    }
+  },
+  "patients": {
+    "$jsonSchema": {
+      "bsonType": "object",
+      "required": ["patient_id", "name", "age", "gender", "diabetes_duration_years", "contact_number", "created_at"],
+      "properties": {
+        "_id": { "bsonType": "objectId" },
+        "patient_id": { "bsonType": "string", "pattern": "^P-[0-9]{4}$" },
+        "name": { "bsonType": "string" },
+        "age": { "bsonType": "int", "minimum": 0 },
+        "gender": { "bsonType": "string" },
+        "diabetes_duration_years": { "anyOf": [{ "bsonType": "int" }, { "bsonType": "null" }] },
+        "contact_number": { "anyOf": [{ "bsonType": "string" }, { "bsonType": "null" }] },
+        "created_at": { "bsonType": "string" }
+      }
+    }
+  },
+  "screenings": {
+    "$jsonSchema": {
+      "bsonType": "object",
+      "required": ["screening_id", "patient_id", "eye", "status", "image_path", "image_url", "image_quality", "prediction", "explanation", "risk", "created_at"],
+      "properties": {
+        "_id": { "bsonType": "objectId" },
+        "screening_id": { "bsonType": "string", "pattern": "^SCR-[0-9]{4}$" },
+        "patient_id": { "bsonType": "string" },
+        "eye": { "enum": ["left", "right"] },
+        "status": { "enum": ["created", "image_uploaded", "quality_checking", "quality_failed", "ai_processing", "completed", "failed"] },
+        "image_path": { "anyOf": [{ "bsonType": "string" }, { "bsonType": "null" }] },
+        "image_url": { "anyOf": [{ "bsonType": "string" }, { "bsonType": "null" }] },
+        "image_quality": {
+          "anyOf": [
+            {
+              "bsonType": "object",
+              "properties": {
+                "status": { "enum": ["good", "poor"] },
+                "score": { "bsonType": ["double", "int"] },
+                "checks": { "bsonType": "object" },
+                "issues": { "bsonType": "array" },
+                "action": { "anyOf": [{ "bsonType": "string" }, { "bsonType": "null" }] }
+              }
+            },
+            { "bsonType": "null" }
+          ]
+        },
+        "prediction": {
+          "anyOf": [
+            {
+              "bsonType": "object",
+              "required": ["grade", "label", "confidence"],
+              "properties": {
+                "grade": { "bsonType": "int", "minimum": 0, "maximum": 4 },
+                "label": { "bsonType": "string" },
+                "confidence": { "bsonType": ["double", "int"] },
+                "probabilities": { "bsonType": "object" }
+              }
+            },
+            { "bsonType": "null" }
+          ]
+        },
+        "explanation": {
+          "anyOf": [
+            { "bsonType": "object", "required": ["heatmap_url"] },
+            { "bsonType": "null" }
+          ]
+        },
+        "risk": {
+          "anyOf": [
+            {
+              "bsonType": "object",
+              "required": ["level", "label", "description", "recommendation", "action_required", "follow_up_timeframe"],
+              "properties": {
+                "level": { "enum": ["low", "monitor", "high", "urgent", "recapture", "unknown"] },
+                "label": { "bsonType": "string" },
+                "description": { "bsonType": "string" },
+                "recommendation": { "bsonType": "string" },
+                "action_required": { "bsonType": "string" },
+                "follow_up_timeframe": { "bsonType": "string" }
+              }
+            },
+            { "bsonType": "null" }
+          ]
+        },
+        "created_at": { "bsonType": "string" }
+      }
+    }
+  },
+  "counters": {
+    "$jsonSchema": {
+      "bsonType": "object",
+      "required": ["_id", "seq"],
+      "properties": {
+        "_id": { "enum": ["patient_id", "screening_id"] },
+        "seq": { "bsonType": "int", "minimum": 1 }
+      }
+    }
+  }
+}

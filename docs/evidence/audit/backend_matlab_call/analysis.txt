@@ -1,0 +1,50 @@
+=== BACKEND MATLAB INTEGRATION CALL — ANALYSIS ===
+Date: 2026-09-23
+Endpoint: POST /api/screenings/SCR-0068/analyze
+Image: phc_hero.jpg (deliberately NON-fundus marketing hero image)
+
+RESULT: HTTP 200 — MATLAB pipeline executed successfully (elapsed ~30.8s)
+MATLAB invoked via subprocess: matlab -batch "cd('Matlab/'); runPipeline(...)"
+Raw response saved in stdout.txt (this file).
+
+=== CONTRACT SHAPE OBSERVATION (REQUIRED FINDING) ===
+The response contains BOTH shapes simultaneously:
+
+1. matlab_result (raw MATLAB output) — NESTED shape
+   matches system.md §11 exactly:
+   {
+     screening_id, pipeline_version, model_version,
+     fundus: {...}, quality: [...], enhancement: [...],
+     prediction: {grade, label, ...}, confidence: {raw, calibrated},
+     referable, xai: {gradcam_path}, evidence, reasons
+   }
+
+2. Top-level mapped fields — FLAT/FLATTENED shape
+   matches implementation_plan.md Phase 1 field list:
+   status, prediction, risk, explanation, image_quality,
+   stage, decision, action, fundus, quality, enhancement, reasons
+
+VERDICT: MIXED — the backend implements a nested contract internally
+(matlab_result) and exposes a flat, frontend-compatible summary at the
+top level. Neither shape is "wrong"; the flat layer is a projection of
+the nested layer created by _map_matlab_result_to_screening().
+
+Note: The mapped response omits some raw nested subfields (e.g.
+confidence, referable are absent at top level when status != completed).
+
+=== KEY OBSERVATIONS ===
+- MATLAB is LIVE in the request path (this is not built-but-unswitched).
+- Safety gate works: non-fundus rejected at STAGE_0, no inference ran.
+- prediction.grade is [] (empty list) rather than null/absent on reject.
+- confidence.raw == 0, calibrated == [] on the reject path.
+- xai.gradcam_path == "" (empty string) — no Grad-CAM on rejected image.
+- evidence == [] — retinal evidence placeholder still empty (expected:
+  not integrated yet).
+- model_version = "EfficientNet-B0-APTOS-v1", pipeline_version = "0.1.0-parity"
+  present in matlab_result (matches model_config.m).
+- status mapping: reject → status=rejected, risk.level=recapture.
+- image_quality flat summary: status=poor, score=0.0, all checks false.
+
+=== MATLAB-ELEMENT TIMING ===
+Total elapsed for analyze call: ~30.8s
+(MATLAB startup + runPipeline on 868KB JPG + JSON write + read-back)

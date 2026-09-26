@@ -1,0 +1,54 @@
+{
+  "successful_screening_normal": {
+    "all_16_fields_present": true,
+    "missing_fields": [],
+    "screening_id_present": true,
+    "stage_value": "STAGE_3_DR_INFERENCE",
+    "status_value": "GOOD",
+    "action_value": "PROCEED",
+    "decision_value": "proceed",
+    "referable_value": false,
+    "model_version": "EfficientNet-B0-APTOS-v1",
+    "pipeline_version": "0.1.0-parity",
+    "pass": true
+  },
+  "non_fundus_rejection": {
+    "all_16_fields_present": true,
+    "missing_fields": [],
+    "screening_id_present": true,
+    "stage_value": "STAGE_0_FUNDUS_VALIDATION",
+    "status_value": "NON_FUNDUS",
+    "action_value": "REJECT",
+    "decision_value": "reject",
+    "referable_value": false,
+    "model_version": "EfficientNet-B0-APTOS-v1",
+    "pipeline_version": "0.1.0-parity",
+    "pass": true
+  },
+  "human_review_uncertain": {
+    "all_16_fields_present": true,
+    "missing_fields": [],
+    "screening_id_present": true,
+    "stage_value": "STAGE_0_FUNDUS_VALIDATION",
+    "status_value": "UNCERTAIN",
+    "action_value": "REJECT / HUMAN REVIEW",
+    "decision_value": "review",
+    "referable_value": true,
+    "model_version": "EfficientNet-B0-APTOS-v1",
+    "pipeline_version": "0.1.0-parity",
+    "pass": true
+  },
+  "specialist_referral_pdr": {
+    "all_16_fields_present": true,
+    "missing_fields": [],
+    "screening_id_present": true,
+    "stage_value": "STAGE_3_DR_INFERENCE",
+    "status_value": "GOOD",
+    "action_value": "SPECIALIST REFERRAL",
+    "decision_value": "review",
+    "referable_value": true,
+    "model_version": "EfficientNet-B0-APTOS-v1",
+    "pipeline_version": "0.1.0-parity",
+    "pass": true
+  }
+}

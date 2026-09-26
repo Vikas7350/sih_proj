@@ -1,0 +1,2 @@
+stage=STAGE_0_FUNDUS_VALIDATION status=UNREADABLE decision=reject model=EfficientNet-B0-APTOS-v1 pipe=0.1.0-parity
+reject path OK, evidence type=double

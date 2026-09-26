@@ -1,0 +1,149 @@
+[
+  {
+    "image_filename": "SCR-0001.jpg",
+    "image_path": "C:\\Users\\ysyas\\RentoAI\\backend\\storage\\uploads\\SCR-0001.jpg",
+    "logits": [
+      2.235943555831909,
+      -0.9983166456222534,
+      -0.7713250517845154,
+      1.1551856994628906,
+      1.1429181098937988
+    ],
+    "probabilities": [
+      0.5671007633209229,
+      0.022337723523378372,
+      0.028029803186655045,
+      0.1924389749765396,
+      0.19009263813495636
+    ],
+    "predicted_grade": 0,
+    "predicted_label": "No DR",
+    "confidence": 0.5671007633209229
+  },
+  {
+    "image_filename": "SCR-0002.jpg",
+    "image_path": "C:\\Users\\ysyas\\RentoAI\\backend\\storage\\uploads\\SCR-0002.jpg",
+    "logits": [
+      1.491363763809204,
+      -0.6491554379463196,
+      -0.013877909630537033,
+      0.7308722734451294,
+      1.1356827020645142
+    ],
+    "probabilities": [
+      0.39877334237098694,
+      0.04689326509833336,
+      0.08851318806409836,
+      0.18640127778053284,
+      0.2794189155101776
+    ],
+    "predicted_grade": 0,
+    "predicted_label": "No DR",
+    "confidence": 0.39877334237098694
+  },
+  {
+    "image_filename": "SCR-0003.jpg",
+    "image_path": "C:\\Users\\ysyas\\RentoAI\\backend\\storage\\uploads\\SCR-0003.jpg",
+    "logits": [
+      3.5001494884490967,
+      1.8781427145004272,
+      -0.848220944404602,
+      -3.432182788848877,
+      -2.6298410892486572
+    ],
+    "probabilities": [
+      0.8240068554878235,
+      0.1627429723739624,
+      0.01065264642238617,
+      0.0008040022803470492,
+      0.0017935344949364662
+    ],
+    "predicted_grade": 0,
+    "predicted_label": "No DR",
+    "confidence": 0.8240068554878235
+  },
+  {
+    "image_filename": "SCR-0004.jpg",
+    "image_path": "C:\\Users\\ysyas\\RentoAI\\backend\\storage\\uploads\\SCR-0004.jpg",
+    "logits": [
+      2.5984063148498535,
+      1.1433948278427124,
+      0.8227211236953735,
+      -2.516583204269409,
+      -2.665464401245117
+    ],
+    "probabilities": [
+      0.7072404623031616,
+      0.16506828367710114,
+      0.1197834461927414,
+      0.004247716162353754,
+      0.0036601347383111715
+    ],
+    "predicted_grade": 0,
+    "predicted_label": "No DR",
+    "confidence": 0.7072404623031616
+  },
+  {
+    "image_filename": "SCR-0005.jpg",
+    "image_path": "C:\\Users\\ysyas\\RentoAI\\backend\\storage\\uploads\\SCR-0005.jpg",
+    "logits": [
+      0.27563008666038513,
+      -4.588415622711182,
+      -0.6304895281791687,
+      1.6684644222259521,
+      2.2000856399536133
+    ],
+    "probabilities": [
+      0.08137047290802002,
+      0.0006281142123043537,
+      0.03288092836737633,
+      0.32761749625205994,
+      0.5575030446052551
+    ],
+    "predicted_grade": 4,
+    "predicted_label": "Proliferative DR",
+    "confidence": 0.5575030446052551
+  },
+  {
+    "image_filename": "SCR-0006.jpg",
+    "image_path": "C:\\Users\\ysyas\\RentoAI\\backend\\storage\\uploads\\SCR-0006.jpg",
+    "logits": [
+      0.27563008666038513,
+      -4.588415622711182,
+      -0.6304895281791687,
+      1.6684644222259521,
+      2.2000856399536133
+    ],
+    "probabilities": [
+      0.08137047290802002,
+      0.0006281142123043537,
+      0.03288092836737633,
+      0.32761749625205994,
+      0.5575030446052551
+    ],
+    "predicted_grade": 4,
+    "predicted_label": "Proliferative DR",
+    "confidence": 0.5575030446052551
+  },
+  {
+    "image_filename": "SCR-0007.jpg",
+    "image_path": "C:\\Users\\ysyas\\RentoAI\\backend\\storage\\uploads\\SCR-0007.jpg",
+    "logits": [
+      2.1324429512023926,
+      -1.146445870399475,
+      0.15572082996368408,
+      -0.9760404229164124,
+      -1.2544958591461182
+    ],
+    "probabilities": [
+      0.7970201969146729,
+      0.03002382628619671,
+      0.11040527373552322,
+      0.035601817071437836,
+      0.02694886550307274
+    ],
+    "predicted_grade": 0,
+    "predicted_label": "No DR",
+    "confidence": 0.7970201969146729
+  }
+]

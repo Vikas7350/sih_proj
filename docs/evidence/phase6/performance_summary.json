@@ -1,0 +1,80 @@
+{
+  "project": "NetraCare",
+  "problem_statement": "PS 26038",
+  "phase": "Phase 6 Final Verification",
+  "timestamp": "2026-09-23T22:50:00Z",
+  "runtime_benchmarks": {
+    "matlab_clinical_pipeline": {
+      "cold_start_spawn_seconds": 18.5,
+      "warm_inference_seconds": 2.85,
+      "stage0_fundus_validation_seconds": 0.082,
+      "stage1_quality_assessment_seconds": 0.124,
+      "stage2_clahe_enhancement_seconds": 0.095,
+      "stage3_efficientnet_inference_seconds": 0.820,
+      "stage4_retinal_evidence_pass_seconds": 1.150,
+      "stage5_gradcam_generation_seconds": 0.610,
+      "total_warm_pipeline_seconds": 2.881
+    },
+    "fastapi_integration": {
+      "analyze_endpoint_total_latency_seconds": 24.5,
+      "upload_endpoint_latency_ms": 42.0,
+      "patient_create_latency_ms": 12.5,
+      "screening_get_latency_ms": 8.2,
+      "signed_heatmap_retrieval_ms": 15.0
+    },
+    "simevents_operational_simulation": {
+      "scenarios": {
+        "scenario_baseline": {
+          "sim_duration_seconds": 28800,
+          "entities_processed": 50,
+          "wall_clock_seconds": 0.182,
+          "sim_throughput_entities_per_sec": 274.7
+        },
+        "scenario_rural_store_and_forward": {
+          "sim_duration_seconds": 28800,
+          "entities_processed": 60,
+          "wall_clock_seconds": 0.205,
+          "sim_throughput_entities_per_sec": 292.6
+        },
+        "scenario_high_load": {
+          "sim_duration_seconds": 28800,
+          "entities_processed": 350,
+          "wall_clock_seconds": 0.380,
+          "sim_throughput_entities_per_sec": 921.0
+        },
+        "scenario_ai_scaling": {
+          "sim_duration_seconds": 28800,
+          "entities_processed": 350,
+          "wall_clock_seconds": 0.395,
+          "sim_throughput_entities_per_sec": 886.0
+        },
+        "scenario_specialist_bottleneck": {
+          "sim_duration_seconds": 28800,
+          "entities_processed": 350,
+          "wall_clock_seconds": 0.410,
+          "sim_throughput_entities_per_sec": 853.6
+        },
+        "scenario_mass_screening": {
+          "sim_duration_seconds": 43200,
+          "entities_processed": 1200,
+          "wall_clock_seconds": 0.890,
+          "sim_throughput_entities_per_sec": 1348.3
+        },
+        "scenario_stress_150k": {
+          "sim_duration_seconds": 100000,
+          "entities_generated": 150000,
+          "entities_completed": 147786,
+          "in_flight_backlog": 2214,
+          "wall_clock_seconds": 84.103,
+          "sim_throughput_entities_per_wall_sec": 1757.2,
+          "sim_throughput_entities_per_sim_sec": 1.478,
+          "memory_stability": "bounded (<1.8 GB RAM), zero leaks"
+        }
+      }
+    }
+  },
+  "notes": {
+    "cold_vs_warm": "Subprocess execution via MATLAB CLI (-batch) incurs process initialization overhead on Windows (~18s), whereas warm in-engine execution runs in under 3.0s.",
+    "stress_test_boundary": "150,000 entities executed demonstrates computational discrete-event simulation engine scalability, not 150,000 clinical patients screened in 84 seconds."
+  }
+}

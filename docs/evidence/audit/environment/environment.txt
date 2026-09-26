@@ -1,0 +1,36 @@
+=== ENVIRONMENT FINGERPRINT ===
+Date: 2026-09-23 00:39:20
+Audit Agent: Baseline Verification Agent
+
+--- OS ---
+Computer: LAPTOP-OG6KQI25
+OS: Microsoft Windows 11 Home Single Language (Build 26200)
+Arch: 64-bit
+
+--- CPU/GPU ---
+CPU: 13th Gen Intel(R) Core(TM) i5-13420H
+GPU: Intel(R) UHD Graphics, NVIDIA GeForce RTX 2050
+
+--- MATLAB ---
+MATLAB Version: 26.1.0.3346908 (R2026a) Update 5
+License: 40737736
+Toolboxes: Simulink, SimEvents, Computer Vision, Deep Learning, Image Processing, Medical Imaging, Statistics/ML, GPU Coder, MATLAB Coder, Simulink Coder, Parallel Computing, Image Acquisition
+
+--- Python ---
+Python: 3.13.7
+torch: 2.13.0
+torchvision: 0.28.0
+numpy: 2.4.2
+opencv-python-headless: 5.0.0.93
+fastapi: 0.141.1
+uvicorn: 0.52.4
+pymongo: 4.16.0
+pydantic: 2.12.5
+
+--- Node.js ---
+Node: v24.7.0
+
+--- Git ---
+Git: 2.53.0.windows.1
+Commit: 2834ade7d4f35e2e9e155fb5f4f44e6ca587c6ac
+Message: chore: baseline RentoAI project

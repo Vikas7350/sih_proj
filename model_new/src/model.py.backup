@@ -1,0 +1,235 @@
+import sys
+from pathlib import Path
+
+import torch
+
+
+# ============================================================
+# Configuration
+# ============================================================
+
+REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
+
+NVIDIA_ROOT = (
+    REPOSITORY_ROOT
+    / "DeepLearningExamples"
+    / "PyTorch"
+    / "Classification"
+    / "ConvNets"
+)
+
+CHECKPOINT_PATH = (
+    REPOSITORY_ROOT
+    / "model"
+    / "nvidia_efficientnet-b0_210412.pth"
+)
+
+NUM_CLASSES = 5
+
+NVIDIA_CHECKPOINT_URL = (
+    "https://api.ngc.nvidia.com/v2/models/"
+    "nvidia/efficientnet_b0_pyt_amp/"
+    "versions/20.12.0/files/"
+    "nvidia_efficientnet-b0_210412.pth"
+)
+
+
+# ============================================================
+# Import NVIDIA EfficientNet
+# ============================================================
+
+sys.path.insert(0, str(NVIDIA_ROOT))
+
+from image_classification.models.efficientnet import (
+    EfficientNet,
+    effnet_b0_layers,
+)
+
+
+# ============================================================
+# Create DR Model
+# ============================================================
+
+def create_model():
+
+    # --------------------------------------------------------
+    # Create EfficientNet-B0 with 5 DR classes
+    #
+    # 0 = No DR
+    # 1 = Mild
+    # 2 = Moderate
+    # 3 = Severe
+    # 4 = Proliferative
+    # --------------------------------------------------------
+
+    model = EfficientNet(
+        arch=effnet_b0_layers,
+        dropout=0.2,
+        num_classes=NUM_CLASSES,
+    )
+
+    print("EfficientNet-B0 created with 5 classes.")
+
+    # --------------------------------------------------------
+    # Check checkpoint exists
+    # --------------------------------------------------------
+
+    if not CHECKPOINT_PATH.exists():
+        raise FileNotFoundError(
+            f"NVIDIA checkpoint not found:\n"
+            f"{CHECKPOINT_PATH}"
+        )
+
+    # --------------------------------------------------------
+    # Load NVIDIA ImageNet checkpoint
+    # --------------------------------------------------------
+
+    checkpoint = torch.load(
+        CHECKPOINT_PATH,
+        map_location="cpu",
+    )
+
+    print("NVIDIA checkpoint loaded.")
+
+    # --------------------------------------------------------
+    # NVIDIA checkpoint key remapping
+    #
+    # IMPORTANT:
+    #
+    # ngc_checkpoint_remap() does NOT accept the checkpoint.
+    #
+    # It returns a FUNCTION that remaps checkpoint keys.
+    #
+    # NVIDIA checkpoint:
+    #
+    #     layer1.block0...
+    #     layer2.block0...
+    #
+    # Current model:
+    #
+    #     layers.0.block0...
+    #     layers.1.block0...
+    #
+    # --------------------------------------------------------
+
+    remap = model.ngc_checkpoint_remap(
+        url=NVIDIA_CHECKPOINT_URL
+    )
+
+    # Apply the returned function to every checkpoint key.
+
+    checkpoint = {
+        remap(key): value
+        for key, value in checkpoint.items()
+    }
+
+    print("Checkpoint keys remapped.")
+
+    # --------------------------------------------------------
+    # Remove ImageNet classifier
+    #
+    # NVIDIA classifier:
+    #
+    #     [1000, 1280]
+    #
+    # Our DR classifier:
+    #
+    #     [5, 1280]
+    #
+    # Therefore the ImageNet classifier must NOT be loaded.
+    # --------------------------------------------------------
+
+    checkpoint.pop(
+        "classifier.fc.weight",
+        None,
+    )
+
+    checkpoint.pop(
+        "classifier.fc.bias",
+        None,
+    )
+
+    print("ImageNet classifier removed.")
+
+    # --------------------------------------------------------
+    # Load pretrained EfficientNet backbone
+    # --------------------------------------------------------
+
+    result = model.load_state_dict(
+        checkpoint,
+        strict=False,
+    )
+
+    # --------------------------------------------------------
+    # Print loading information
+    # --------------------------------------------------------
+
+    print()
+    print("Missing keys:")
+
+    for key in result.missing_keys:
+        print("   ", key)
+
+    print()
+    print("Unexpected keys:")
+
+    for key in result.unexpected_keys:
+        print("   ", key)
+
+    # --------------------------------------------------------
+    # Validate missing keys
+    #
+    # ONLY the new classifier should be missing.
+    # --------------------------------------------------------
+
+    expected_missing = {
+        "classifier.fc.weight",
+        "classifier.fc.bias",
+    }
+
+    actual_missing = set(
+        result.missing_keys
+    )
+
+    if actual_missing != expected_missing:
+
+        raise RuntimeError(
+            "\n"
+            "EfficientNet pretrained backbone "
+            "did NOT load correctly.\n\n"
+            f"Expected missing keys:\n"
+            f"{expected_missing}\n\n"
+            f"Actual missing keys:\n"
+            f"{actual_missing}"
+        )
+
+    # --------------------------------------------------------
+    # Validate unexpected keys
+    # --------------------------------------------------------
+
+    if result.unexpected_keys:
+
+        raise RuntimeError(
+            "\n"
+            "Unexpected checkpoint keys found:\n"
+            + "\n".join(
+                f"  {key}"
+                for key in result.unexpected_keys
+            )
+        )
+
+    # --------------------------------------------------------
+    # Success
+    # --------------------------------------------------------
+
+    print()
+    print("=" * 60)
+    print("PRETRAINED BACKBONE LOADED SUCCESSFULLY")
+    print("=" * 60)
+    print()
+    print("EfficientNet-B0 backbone : NVIDIA pretrained")
+    print("Classifier                : 5-class DR")
+    print("Classes                   : 0, 1, 2, 3, 4")
+    print()
+
+    return model

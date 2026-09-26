@@ -1,0 +1,38 @@
+[2026-09-23 00:57:58] INFO dr_screening: Successfully connected to MongoDB
+[2026-09-23 00:57:58] INFO dr_screening: DR Screening API started
+[2026-09-23 01:05:41] INFO dr_screening: GET /health -> 200 (50.2ms)
+INFO:     127.0.0.1:54889 - "GET /health HTTP/1.1" 200 OK
+[2026-09-23 01:06:31] INFO dr_screening: POST /api/auth/register -> 422 (14.5ms)
+INFO:     127.0.0.1:63492 - "POST /api/auth/register HTTP/1.1" 422 Unprocessable Content
+[2026-09-23 01:06:46] WARNING dr_screening: BREVO_API_KEY is not configured. Falling back to terminal OTP logging for development.
+[2026-09-23 01:06:46] INFO dr_screening: =================================================
+[2026-09-23 01:06:46] INFO dr_screening: [DEV EMAIL FALLBACK - BREVO UNCONFIGURED] To: audit.test@netracare.in
+[2026-09-23 01:06:46] INFO dr_screening: [DEV EMAIL FALLBACK - BREVO UNCONFIGURED] Subject: Verify your email address - NetraCare PHC
+[2026-09-23 01:06:46] INFO dr_screening: [DEV EMAIL FALLBACK - BREVO UNCONFIGURED] OTP CODE: 512798
+[2026-09-23 01:06:46] INFO dr_screening: =================================================
+[2026-09-23 01:06:46] INFO dr_screening: POST /api/auth/register -> 201 (438.2ms)
+INFO:     127.0.0.1:64863 - "POST /api/auth/register HTTP/1.1" 201 Created
+[2026-09-23 01:07:00] INFO dr_screening: POST /api/auth/verify-otp -> 200 (133.1ms)
+INFO:     127.0.0.1:64871 - "POST /api/auth/verify-otp HTTP/1.1" 200 OK
+[2026-09-23 01:07:06] INFO dr_screening: POST /api/auth/login -> 200 (203.2ms)
+INFO:     127.0.0.1:64873 - "POST /api/auth/login HTTP/1.1" 200 OK
+[2026-09-23 01:07:15] INFO dr_screening: POST /api/patients -> 201 (61.4ms)
+INFO:     127.0.0.1:64876 - "POST /api/patients HTTP/1.1" 201 Created
+[2026-09-23 01:07:22] INFO dr_screening: GET /api/patients -> 401 (4.3ms)
+INFO:     127.0.0.1:64879 - "GET /api/patients HTTP/1.1" 401 Unauthorized
+[2026-09-23 01:07:28] INFO dr_screening: GET /api/patients -> 200 (17.6ms)
+INFO:     127.0.0.1:64882 - "GET /api/patients HTTP/1.1" 200 OK
+[2026-09-23 01:07:40] INFO dr_screening: POST /api/screenings -> 201 (170.8ms)
+INFO:     127.0.0.1:64885 - "POST /api/screenings HTTP/1.1" 201 Created
+[2026-09-23 01:07:47] INFO dr_screening: POST /api/screenings/SCR-0068/image -> 415 (183.2ms)
+INFO:     127.0.0.1:64890 - "POST /api/screenings/SCR-0068/image HTTP/1.1" 415 Unsupported Media Type
+[2026-09-23 01:07:59] INFO dr_screening: POST /api/screenings/SCR-0068/image -> 200 (241.3ms)
+INFO:     127.0.0.1:64892 - "POST /api/screenings/SCR-0068/image HTTP/1.1" 200 OK
+[2026-09-23 01:08:07] INFO dr_screening: Invoking MATLAB pipeline for screening SCR-0068 with image D:\SIH\2026\new netracare\backend\storage\uploads\SCR-0068.jpg
+[2026-09-23 01:08:37] INFO dr_screening: No Grad-CAM file found or produced for screening SCR-0068
+[2026-09-23 01:08:37] INFO dr_screening: POST /api/screenings/SCR-0068/analyze -> 200 (30739.8ms)
+INFO:     127.0.0.1:64894 - "POST /api/screenings/SCR-0068/analyze HTTP/1.1" 200 OK
+[2026-09-23 01:08:51] INFO dr_screening: Invoking MATLAB pipeline for screening SCR-0068 with image D:\SIH\2026\new netracare\backend\storage\uploads\SCR-0068.jpg
+[2026-09-23 01:09:15] INFO dr_screening: No Grad-CAM file found or produced for screening SCR-0068
+[2026-09-23 01:09:15] INFO dr_screening: POST /api/screenings/SCR-0068/analyze -> 200 (24571.1ms)
+INFO:     127.0.0.1:54780 - "POST /api/screenings/SCR-0068/analyze HTTP/1.1" 200 OK

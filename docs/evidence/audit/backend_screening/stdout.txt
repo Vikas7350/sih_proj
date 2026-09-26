@@ -1,0 +1,28 @@
+=== BACKEND SCREENING WORKFLOW ===
+Date: 2026-09-23
+
+USER: audit.test@netracare.in / Audit Test (phc_staff)
+Steps executed against http://127.0.0.1:8000:
+
+1. POST /api/auth/register   -> 201 {id, email, phc_id} (Audit Test / APHC01)
+2. OTP from terminal log: 512798 (dev fallback, Brevo SMS unconfigured)
+3. POST /api/auth/verify-otp -> {message: "Email verified successfully! You can now log in."}
+4. POST /api/auth/login      -> {access_token (JWT), token_type: bearer, user}
+5. POST /api/patients        -> 201 P-0017 (Audit Patient, 45/M, 7y diabetes)
+6. GET  /api/patients        -> 200 {items: [P-0017], total:1}
+7. POST /api/screenings      -> 201 SCR-0068 (patient P-0017, left eye)
+8. POST /api/screenings/SCR-0068/image
+   - PowerShell -Form attempt: FAILED 415 UNSUPPORTED_TYPE
+     (content-type not set correctly; validate_image rejected)
+   - curl.exe -F with explicit type=image/jpeg: SUCCESS
+     {"screening_id":"SCR-0068","image_uploaded":true,"image_url":"/storage/uploads/SCR-0068.jpg?..."}
+9. POST /api/screenings/SCR-0068/analyze
+   -> 200 (full matlab_result returned, ~30.8s elapsed, MATLAB LIVE)
+   Result: status=rejected (correctly rejected non-fundus image)
+
+=== VERDICT ===
+Backend auth + patient + screening + upload + MATLAB analyze all work.
+Full end-to-end flow verified via HTTP against the live server.
+Note: PowerShell Invoke-RestMethod -Form failed to set the image content
+type for the upload endpoint; curl -F worked. Recorded as a client-side
+observation (may affect frontend/browser upload behavior — see frontend).

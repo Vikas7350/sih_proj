@@ -1,0 +1,130 @@
+{
+  "generated": "2026-09-23 19:37:14",
+  "source": "Matlab/enhancement/enhanceBorderline.m (Stage 2)",
+  "fixtures": [
+    {
+      "image": "SCR-0062.jpg",
+      "before": "GOOD",
+      "after": "GOOD",
+      "applied": false,
+      "improved": false,
+      "beforeScore": 0.7801,
+      "afterScore": 0.7801,
+      "method": "None (Bypassed: Image is already GOOD)",
+      "reasons": [
+        "Image quality is GOOD. Enhancement bypassed per clinical safety protocol."
+      ]
+    },
+    {
+      "image": "SCR-0044.jpg",
+      "before": "GOOD",
+      "after": "GOOD",
+      "applied": false,
+      "improved": false,
+      "beforeScore": 0.8117,
+      "afterScore": 0.8117,
+      "method": "None (Bypassed: Image is already GOOD)",
+      "reasons": [
+        "Image quality is GOOD. Enhancement bypassed per clinical safety protocol."
+      ]
+    },
+    {
+      "image": "SCR-0050.jpg",
+      "before": "GOOD",
+      "after": "GOOD",
+      "applied": false,
+      "improved": false,
+      "beforeScore": 0.6519,
+      "afterScore": 0.6519,
+      "method": "None (Bypassed: Image is already GOOD)",
+      "reasons": [
+        "Image quality is GOOD. Enhancement bypassed per clinical safety protocol."
+      ]
+    },
+    {
+      "image": "SCR-0001.jpg",
+      "before": "UNGRADABLE",
+      "after": "UNGRADABLE",
+      "applied": false,
+      "improved": false,
+      "beforeScore": 0.3708,
+      "afterScore": 0.3708,
+      "method": "None (Bypassed: Image is UNGRADABLE)",
+      "reasons": [
+        "Image is UNGRADABLE. Post-processing repair prohibited; patient RECAPTURE required."
+      ]
+    },
+    {
+      "image": "SCR-0002.jpg",
+      "before": "UNGRADABLE",
+      "after": "UNGRADABLE",
+      "applied": false,
+      "improved": false,
+      "beforeScore": 0.3324,
+      "afterScore": 0.3324,
+      "method": "None (Bypassed: Image is UNGRADABLE)",
+      "reasons": [
+        "Image is UNGRADABLE. Post-processing repair prohibited; patient RECAPTURE required."
+      ]
+    },
+    {
+      "image": "SCR-0003.jpg",
+      "before": "GOOD",
+      "after": "GOOD",
+      "applied": false,
+      "improved": false,
+      "beforeScore": 0.8683,
+      "afterScore": 0.8683,
+      "method": "None (Bypassed: Image is already GOOD)",
+      "reasons": [
+        "Image quality is GOOD. Enhancement bypassed per clinical safety protocol."
+      ]
+    },
+    {
+      "image": "SCR-0004.jpg",
+      "before": "GOOD",
+      "after": "GOOD",
+      "applied": false,
+      "improved": false,
+      "beforeScore": 0.8626,
+      "afterScore": 0.8626,
+      "method": "None (Bypassed: Image is already GOOD)",
+      "reasons": [
+        "Image quality is GOOD. Enhancement bypassed per clinical safety protocol."
+      ]
+    },
+    {
+      "image": "SCR-0055.jpg",
+      "before": "GOOD",
+      "after": "GOOD",
+      "applied": false,
+      "improved": false,
+      "beforeScore": 0.8479,
+      "afterScore": 0.8479,
+      "method": "None (Bypassed: Image is already GOOD)",
+      "reasons": [
+        "Image quality is GOOD. Enhancement bypassed per clinical safety protocol."
+      ]
+    },
+    {
+      "image": "SCR-0066.jpg",
+      "before": "UNGRADABLE",
+      "after": "UNGRADABLE",
+      "applied": false,
+      "improved": false,
+      "beforeScore": 0.7847,
+      "afterScore": 0.7847,
+      "method": "None (Bypassed: Image is UNGRADABLE)",
+      "reasons": [
+        "Image is UNGRADABLE. Post-processing repair prohibited; patient RECAPTURE required."
+      ]
+    }
+  ],
+  "synthetic_checks": {
+    "black_image_quality_status": "UNGRADABLE",
+    "black_image_acceptable": false,
+    "black_image_enhance_applied": false,
+    "note": "Synthetic degenerate inputs only (code-path proof); no fabricated clinical/borderline fixture exists in repo."
+  },
+  "borderline_note": "No natural BORDERLINE fixture in repository; Stage-2 BORDERLINE branch code-verified in runPipeline.m:176-191 only."
+}
