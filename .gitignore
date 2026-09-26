@@ -78,3 +78,9 @@ model_new/DeepLearningExamples/TensorFlow/
 model_new/DeepLearningExamples/TensorFlow2/
 model_new/DeepLearningExamples/Tools/
 model_new/DeepLearningExamples/PyTorch/LanguageModeling/
+
+# Unused / redundant model weight files (production runtime uses best_model.pth)
+Matlab/model/netracare_efficientnet_b0.mat
+Matlab/model/netracare_efficientnet_b0.onnx
+model_new/nvidia_efficientnet-b0_210412.pth
+
