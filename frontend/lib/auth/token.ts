@@ -7,8 +7,13 @@ import { jwtVerify } from 'jose';
 
 export const SESSION_COOKIE = process.env.SESSION_COOKIE_NAME || 'dr_token';
 
-function secretKey(): Uint8Array {
-  return new TextEncoder().encode(process.env.AUTH_SECRET || '');
+function getAuthSecret(): Uint8Array | null {
+  const secret = process.env.AUTH_SECRET;
+  if (!secret) {
+    console.error('[auth] FATAL: AUTH_SECRET is not defined in environment variables!');
+    return null;
+  }
+  return new TextEncoder().encode(secret);
 }
 
 export interface SessionUser {
@@ -40,10 +45,31 @@ export function toSessionUser(payload: Record<string, unknown>): SessionUser {
 
 /** Verify the token bytes were signed with our AUTH_SECRET. Returns raw payload. */
 export async function verifyToken(token: string): Promise<Record<string, unknown> | null> {
+  const secretKey = getAuthSecret();
+  if (!secretKey) {
+    return null;
+  }
+
   try {
-    const { payload } = await jwtVerify(token, secretKey(), { algorithms: ['HS256'] });
+    const { payload } = await jwtVerify(token, secretKey, {
+      algorithms: ['HS256'],
+      clockTolerance: '60s',
+    });
     return payload as unknown as Record<string, unknown>;
-  } catch {
+  } catch (err: unknown) {
+    const errName = err instanceof Error ? err.name : 'UnknownError';
+    const errCode = (err as { code?: string })?.code || 'N/A';
+    const errMsg = err instanceof Error ? err.message : String(err);
+    const secretPresent = Boolean(process.env.AUTH_SECRET);
+    const secretLength = process.env.AUTH_SECRET ? process.env.AUTH_SECRET.length : 0;
+
+    console.error('[auth] JWT verification failed:', {
+      error: errName,
+      code: errCode,
+      message: errMsg,
+      authSecretPresent: secretPresent,
+      authSecretLength: secretLength,
+    });
     return null;
   }
 }
