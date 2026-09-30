@@ -1,6 +1,8 @@
 import json
 import os
+import smtplib
 import urllib.request
+from email.message import EmailMessage
 from email.utils import parseaddr
 
 from fastapi import HTTPException
@@ -27,85 +29,148 @@ def build_otp_email_html(otp: str, purpose: str) -> str:
     return _BUILD.format(title=title, subtitle=subtitle, otp=otp)
 
 
-def send_email(to: str, subject: str, html: str, otp_for_dev_only: str = "") -> bool:
-    """Send an email via the Brevo REST API (HTTPS, no SMTP port needed).
+def _mask_email(email: str) -> str:
+    if not email or "@" not in email:
+        return "***"
+    parts = email.split("@", 1)
+    name, domain = parts[0], parts[1]
+    if len(name) <= 2:
+        masked_name = name[0] + "*"
+    else:
+        masked_name = name[0] + "*" * (len(name) - 2) + name[-1]
+    return f"{masked_name}@{domain}"
 
-    - When BREVO_API_KEY is configured (v3 API key starting with xkeysib-), sends via Brevo REST API.
-    - When Brevo is unconfigured, or an SMTP key (xsmtpsib-) is passed instead of a REST API key,
-      or SMTP_DISABLED=1, the OTP is logged to the terminal in development as a dev aid.
-    """
-    api_key = os.getenv("BREVO_API_KEY")
-    if not api_key:
-        fallback = os.getenv("EMAIL_SERVER_PASSWORD", "")
-        if fallback.startswith("xkeysib-"):
-            api_key = fallback
+
+def _send_smtp(to_addr: str, subject: str, html_content: str, host: str, port: int, user: str, password: str, from_addr: str) -> bool:
+    msg = EmailMessage()
+    msg["Subject"] = subject
+    msg["From"] = from_addr
+    msg["To"] = to_addr
+    msg.set_content(html_content.replace("<[^>]*>", ""), subtype="plain")
+    msg.add_alternative(html_content, subtype="html")
+
+    logger.info(f"[auth-email] Attempting SMTP connection to {host}:{port} for { _mask_email(to_addr) }")
+    try:
+        if port == 465:
+            server = smtplib.SMTP_SSL(host, port, timeout=15)
+        else:
+            server = smtplib.SMTP(host, port, timeout=15)
+            server.ehlo()
+            server.starttls()
+            server.ehlo()
+
+        if user and password:
+            logger.info(f"[auth-email] Authenticating SMTP user {_mask_email(user)}")
+            server.login(user, password)
+            logger.info("[auth-email] SMTP authentication successful")
+
+        server.send_message(msg)
+        server.quit()
+        logger.info(f"[auth-email] Mail send succeeded via SMTP to {_mask_email(to_addr)}")
+        return True
+    except Exception as e:
+        logger.error(f"[auth-email] Mail send failed via SMTP to {_mask_email(to_addr)}: {e}")
+        raise HTTPException(
+            status_code=502,
+            detail=f"Failed to send email via SMTP ({host}:{port}). Check email server configuration."
+        ) from e
+
+
+def send_email(to: str, subject: str, html: str, otp_for_dev_only: str = "") -> bool:
+    """Send an email via SMTP (if configured) or Brevo REST API (if BREVO_API_KEY set)."""
+    smtp_disabled = os.getenv("SMTP_DISABLED") == "1"
 
     from_addr = os.getenv("EMAIL_FROM") or "noreply@hackathonstarter.com"
     envelope_from = parseaddr(from_addr)[1] or from_addr
 
-    is_smtp_key = bool(api_key and api_key.startswith("xsmtpsib-"))
-    is_valid_api_key = bool(api_key and not is_smtp_key)
+    api_key = os.getenv("BREVO_API_KEY", "")
+    smtp_host = os.getenv("EMAIL_SERVER_HOST", "")
+    smtp_port_str = os.getenv("EMAIL_SERVER_PORT", "587")
+    smtp_user = os.getenv("EMAIL_SERVER_USER", "")
+    smtp_pass = os.getenv("EMAIL_SERVER_PASSWORD", "")
 
-    smtp_disabled = os.getenv("SMTP_DISABLED") == "1"
+    # Fall back to Brevo SMTP if xsmtpsib- password is in BREVO_API_KEY or EMAIL_SERVER_PASSWORD
+    if not smtp_pass and api_key.startswith("xsmtpsib-"):
+        smtp_pass = api_key
+    if not api_key and smtp_pass.startswith("xkeysib-"):
+        api_key = smtp_pass
 
-    if smtp_disabled or not is_valid_api_key:
-        if is_smtp_key:
-            logger.warning(
-                "Brevo API key starts with 'xsmtpsib-', which is an SMTP password. "
-                "The Brevo REST API requires a v3 API Key starting with 'xkeysib-' (Brevo Dashboard -> API Keys). "
-                "Falling back to terminal OTP logging for development."
-            )
-        else:
-            logger.warning("BREVO_API_KEY is not configured. Falling back to terminal OTP logging for development.")
+    if not smtp_host and (smtp_pass.startswith("xsmtpsib-") or (smtp_user and smtp_pass)):
+        smtp_host = "smtp-relay.brevo.com"
 
-        if os.getenv("NODE_ENV") != "production":
-            _log_dev(to, subject, otp_for_dev_only)
-            return False
-        else:
+    try:
+        smtp_port = int(smtp_port_str)
+    except ValueError:
+        smtp_port = 587
+
+    is_smtp_configured = bool(smtp_host and smtp_pass)
+    is_valid_rest_key = bool(api_key and api_key.startswith("xkeysib-"))
+
+    if not smtp_disabled and is_smtp_configured:
+        return _send_smtp(
+            to_addr=to,
+            subject=subject,
+            html_content=html,
+            host=smtp_host,
+            port=smtp_port,
+            user=smtp_user or envelope_from,
+            password=smtp_pass,
+            from_addr=from_addr,
+        )
+
+    if not smtp_disabled and is_valid_rest_key:
+        logger.info(f"[auth-email] Attempting Brevo REST API send to {_mask_email(to)}")
+        body = json.dumps({
+            "sender": {"name": parseaddr(from_addr)[0] or "NetraCare", "email": envelope_from},
+            "to": [{"email": to}],
+            "subject": subject,
+            "htmlContent": html,
+            "textContent": html.replace("<[^>]*>", ""),
+        }).encode("utf-8")
+        req = urllib.request.Request(
+            "https://api.brevo.com/v3/smtp/email",
+            data=body,
+            headers={
+                "Content-Type": "application/json",
+                "api-key": api_key,
+                "Accept": "application/json",
+            },
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                if resp.status >= 300:
+                    raise RuntimeError(f"Brevo API returned HTTP {resp.status}")
+            logger.info(f"[auth-email] Brevo REST API send succeeded to {_mask_email(to)}")
+            return True
+        except Exception as e:
+            logger.error(f"[auth-email] Brevo REST API send failed to {_mask_email(to)}: {e}")
             raise HTTPException(
                 status_code=502,
-                detail=(
-                    "Brevo API key is missing or invalid (SMTP key 'xsmtpsib-' cannot be used for REST API). "
-                    "Please configure BREVO_API_KEY with a v3 API key starting with 'xkeysib-' in backend/.env."
-                ),
-            )
+                detail="Failed to send email via Brevo REST API. Check BREVO_API_KEY settings."
+            ) from e
 
-    body = json.dumps({
-        "sender": {"name": parseaddr(from_addr)[0] or "NetraCare", "email": envelope_from},
-        "to": [{"email": to}],
-        "subject": subject,
-        "htmlContent": html,
-        "textContent": html.replace("<[^>]*>", ""),
-    }).encode("utf-8")
-    req = urllib.request.Request(
-        "https://api.brevo.com/v3/smtp/email",
-        data=body,
-        headers={
-            "Content-Type": "application/json",
-            "api-key": api_key,
-            "Accept": "application/json",
-        },
-        method="POST",
-    )
-    try:
-        with urllib.request.urlopen(req, timeout=15) as resp:
-            if resp.status >= 300:
-                raise RuntimeError(f"Brevo API returned HTTP {resp.status}: {resp.read().decode()}")
-        return True
-    except Exception as e:
-        logger.error(f"Failed to send email via Brevo API to {to}: {e}")
+    if smtp_disabled:
+        logger.warning("[auth-email] SMTP_DISABLED=1. Terminal OTP logging active.")
+    else:
+        logger.warning("[auth-email] Neither SMTP credentials nor Brevo REST API key (xkeysib-) configured.")
+
+    if os.getenv("NODE_ENV") != "production":
+        _log_dev(to, subject, otp_for_dev_only)
+        return False
+    else:
         raise HTTPException(
             status_code=502,
             detail=(
-                "Failed to send the OTP email. Check backend Brevo settings "
-                "(BREVO_API_KEY must be a valid 'xkeysib-...' API key & sender email verified in Brevo)."
+                "Email delivery service is unconfigured or disabled. "
+                "Please configure EMAIL_SERVER_* or BREVO_API_KEY in environment settings."
             ),
-        ) from e
+        )
 
 
 def _log_dev(to: str, subject: str, otp: str) -> None:
     logger.info("=" * 49)
-    logger.info(f"[DEV EMAIL FALLBACK - BREVO UNCONFIGURED] To: {to}")
+    logger.info(f"[DEV EMAIL FALLBACK - BREVO UNCONFIGURED] To: {_mask_email(to)}")
     logger.info(f"[DEV EMAIL FALLBACK - BREVO UNCONFIGURED] Subject: {subject}")
     if otp:
         logger.info(f"[DEV EMAIL FALLBACK - BREVO UNCONFIGURED] OTP CODE: {otp}")

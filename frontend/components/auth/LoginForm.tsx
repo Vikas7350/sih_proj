@@ -49,6 +49,7 @@ export default function LoginForm() {
 
     try {
       setIsLoading(true);
+      console.log('[auth-login] Login request start');
 
       // POST straight to the backend through the /api/backend rewrite. The
       // backend owns the session: it sets the httpOnly dr_token cookie in the
@@ -61,7 +62,10 @@ export default function LoginForm() {
           password: formData.password,
         }),
       });
+
+      console.log('[auth-login] Login response status:', res.status);
       const data = await res.json().catch(() => ({}));
+      console.log('[auth-login] Login response parsed successfully');
 
       if (!res.ok) {
         const msg =
@@ -72,11 +76,12 @@ export default function LoginForm() {
         setErrorMessage(typeof msg === 'string' ? msg : 'Invalid email or password');
         setIsLoading(false);
       } else {
-        router.push(callbackUrl);
-        router.refresh();
+        console.log('[auth-login] router.push start for:', callbackUrl);
+        window.location.href = callbackUrl;
+        console.log('[auth-login] Navigation initiated successfully');
       }
     } catch (err) {
-      console.error('Login form submit error:', err);
+      console.error('[auth-login] Login form submit error:', err);
       setErrorMessage('An unexpected error occurred. Please try again.');
       setIsLoading(false);
     }
