@@ -3,6 +3,7 @@ import {
   fetchPatients,
   fetchPatient,
   createPatient as backendCreatePatient,
+  updatePatient as backendUpdatePatient,
 } from './backendClient';
 
 export async function getPatients(searchQuery?: string, filterStatus?: string): Promise<Patient[]> {
@@ -25,6 +26,19 @@ export async function registerPatient(
   patientData: Omit<Patient, 'id' | 'createdAt'>
 ): Promise<Patient> {
   return backendCreatePatient({
+    name: patientData.name,
+    age: patientData.age,
+    gender: patientData.gender,
+    diabetesDurationYears: patientData.diabetesDurationYears,
+    contactNumber: patientData.contactNumber,
+  });
+}
+
+export async function updatePatient(
+  patientId: string,
+  patientData: Partial<Omit<Patient, 'id' | 'createdAt'>>
+): Promise<Patient> {
+  return backendUpdatePatient(patientId, {
     name: patientData.name,
     age: patientData.age,
     gender: patientData.gender,

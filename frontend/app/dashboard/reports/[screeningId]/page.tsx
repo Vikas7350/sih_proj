@@ -3,15 +3,18 @@
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Printer, Download, Eye, ArrowLeft, Building2, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { Printer, Download, Eye, ArrowLeft, Building2, ShieldAlert, CheckCircle2, Phone, CalendarClock } from 'lucide-react';
 import { getScreeningReport } from '@/lib/api/reports';
-import { ScreeningReport } from '@/lib/api/types';
+import { getPatientById } from '@/lib/api/patients';
+import { ScreeningReport, Patient } from '@/lib/api/types';
+import { getFollowUpRecommendation } from '@/lib/utils/followUp';
 
 export default function ScreeningReportPage() {
   const pathname = usePathname();
   const screeningId = pathname.split('/').pop() || '';
 
   const [report, setReport] = useState<ScreeningReport | null>(null);
+  const [patient, setPatient] = useState<Patient | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,6 +23,12 @@ export default function ScreeningReportPage() {
       try {
         const data = await getScreeningReport(screeningId);
         setReport(data);
+        if (data?.patientId) {
+          try {
+            const p = await getPatientById(data.patientId);
+            setPatient(p);
+          } catch {}
+        }
       } catch (err) {
         console.error('Failed to load report:', err);
       } finally {
@@ -127,6 +136,13 @@ export default function ScreeningReportPage() {
             <span className="font-semibold text-slate-900">{report.patientAge} Yrs / {report.patientGender}</span>
           </div>
           <div>
+            <span className="text-slate-500 block font-medium">Mobile (SMS)</span>
+            <span className="font-mono font-bold text-emerald-800 flex items-center gap-1">
+              <Phone className="w-3 h-3 text-emerald-600" />
+              {patient?.contactNumber || 'Not provided'}
+            </span>
+          </div>
+          <div>
             <span className="text-slate-500 block font-medium">Diabetes Duration</span>
             <span className="font-bold text-teal-800">{report.diabetesDurationYears} Years</span>
           </div>
@@ -137,10 +153,6 @@ export default function ScreeningReportPage() {
           <div>
             <span className="text-slate-500 block font-medium">Screening Date</span>
             <span className="font-medium text-slate-900">{new Date(report.date).toLocaleDateString('en-IN')}</span>
-          </div>
-          <div>
-            <span className="text-slate-500 block font-medium">Examiner / CHO</span>
-            <span className="font-semibold text-slate-900">{report.healthcareWorkerName}</span>
           </div>
           <div>
             <span className="text-slate-500 block font-medium">Report Status</span>
@@ -278,6 +290,56 @@ export default function ScreeningReportPage() {
           <p className="text-sm font-bold text-amber-300">{report.risk?.recommendation}</p>
           <p className="text-xs text-slate-300">{report.risk?.actionRequired}</p>
         </div>
+
+        {/* Clinical Follow-Up Recommendation & Referral Guidance */}
+        {(() => {
+          const followUp = getFollowUpRecommendation(report.prediction?.grade ?? 0, report.date || report.reportGeneratedAt);
+          return (
+            <div className="p-5 rounded-xl bg-teal-50/60 border border-teal-200 space-y-3 print:break-inside-avoid">
+              <div className="flex items-center justify-between border-b border-teal-200/80 pb-2.5">
+                <div className="flex items-center gap-2">
+                  <CalendarClock className="w-4 h-4 text-teal-800" />
+                  <span className="text-xs font-extrabold uppercase tracking-wider text-teal-950">
+                    Recommended Follow-up &amp; Referral Protocol
+                  </span>
+                </div>
+                <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${
+                  followUp.isUrgent
+                    ? 'bg-rose-100 text-rose-800 border-rose-300'
+                    : followUp.isReferralRequired
+                    ? 'bg-amber-100 text-amber-900 border-amber-300'
+                    : 'bg-emerald-100 text-emerald-900 border-emerald-300'
+                }`}>
+                  {followUp.isUrgent ? 'URGENT SPECIALIST REFERRAL' : followUp.isReferralRequired ? 'SPECIALIST REFERRAL REQUIRED' : 'PHC ROUTINE FOLLOW-UP'}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                <div className="p-3 bg-white rounded-lg border border-teal-100 space-y-0.5">
+                  <span className="text-[10px] font-bold text-slate-500 uppercase">Recommended Interval</span>
+                  <p className="font-bold text-slate-900 text-sm">{followUp.intervalLabel}</p>
+                </div>
+                <div className="p-3 bg-white rounded-lg border border-teal-100 space-y-0.5">
+                  <span className="text-[10px] font-bold text-slate-500 uppercase">Suggested Target Date</span>
+                  <p className="font-bold text-teal-900 text-sm font-mono">
+                    {new Date(followUp.suggestedDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </p>
+                </div>
+                <div className="p-3 bg-white rounded-lg border border-teal-100 space-y-0.5">
+                  <span className="text-[10px] font-bold text-slate-500 uppercase">Follow-up Destination</span>
+                  <p className="font-bold text-slate-900 text-xs flex items-center gap-1">
+                    <Building2 className="w-3.5 h-3.5 text-teal-700 shrink-0" />
+                    <span>{followUp.destinationLabel}</span>
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-3 bg-white/80 rounded-lg border border-teal-100 text-xs text-slate-700 leading-relaxed">
+                <strong>Next Clinical Action:</strong> {followUp.actionExplanation}
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Disclaimer & Signature Footer */}
         <div className="pt-6 border-t border-slate-200 space-y-6">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, createContext, useContext } from 'react';
+import { useState, useEffect, createContext, useContext } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
@@ -14,6 +14,7 @@ import {
   ChevronRight,
   ShieldCheck,
   X,
+  CalendarClock,
 } from 'lucide-react';
 import SidebarNav from './SidebarNav';
 import HeaderNav from './HeaderNav';
@@ -46,6 +47,17 @@ export default function DashboardShell({
 
   const toggleDrawer = () => setDrawerOpen((prev) => !prev);
 
+  // Close drawer on Escape key press
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && drawerOpen) {
+        setDrawerOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [drawerOpen]);
+
   const navItems = [
     {
       name: 'PHC dashboard',
@@ -70,6 +82,12 @@ export default function DashboardShell({
       href: '/dashboard/screenings',
       icon: History,
       badge: null,
+    },
+    {
+      name: 'Follow-Up & Reminders',
+      href: '/dashboard/reminders',
+      icon: CalendarClock,
+      badge: 'Follow-ups',
     },
     {
       name: 'Screening reports',

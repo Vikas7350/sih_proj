@@ -31,7 +31,8 @@ export async function POST(req: NextRequest) {
       body: payload,
     });
 
-    if (!ok) return apiError(json?.detail || 'Account registration failed', status);
+    const errorMsg = typeof json?.detail === 'string' ? json.detail : (json?.detail?.message || 'Account registration failed');
+    if (!ok) return apiError(errorMsg, status);
 
     return apiSuccess(
       'PHC account created successfully. Please verify your email with the OTP sent to your address.',

@@ -9,6 +9,7 @@ import {
   History,
   FileText,
   Building2,
+  CalendarClock,
 } from 'lucide-react';
 import { useDrawer } from './DashboardShell';
 
@@ -44,6 +45,11 @@ export default function SidebarNav({ user }: SidebarNavProps) {
       name: 'Screening history',
       href: '/dashboard/screenings',
       icon: History,
+    },
+    {
+      name: 'Follow-Up & Reminders',
+      href: '/dashboard/reminders',
+      icon: CalendarClock,
     },
     {
       name: 'Screening reports',

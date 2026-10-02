@@ -1,12 +1,25 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { User, Eye, Calendar, ArrowRight, ArrowLeft, History, PlusCircle } from 'lucide-react';
+import {
+  User,
+  Eye,
+  Calendar,
+  ArrowRight,
+  ArrowLeft,
+  History,
+  PlusCircle,
+  CalendarClock,
+  Plus,
+} from 'lucide-react';
 import { getPatientById } from '@/lib/api/patients';
 import { getScreeningsByPatientId } from '@/lib/api/screening';
-import { Patient, ScreeningResult } from '@/lib/api/types';
+import { getReminders } from '@/lib/api/reminders';
+import { Patient, ScreeningResult, PatientReminder } from '@/lib/api/types';
+import ReminderList from '@/components/reminders/ReminderList';
+import ScheduleReminderModal from '@/components/reminders/ScheduleReminderModal';
 
 export default function PatientDetailsPage() {
   const pathname = usePathname();
@@ -14,26 +27,31 @@ export default function PatientDetailsPage() {
 
   const [patient, setPatient] = useState<Patient | null>(null);
   const [screenings, setScreenings] = useState<ScreeningResult[]>([]);
+  const [reminders, setReminders] = useState<PatientReminder[]>([]);
+  const [isReminderModalOpen, setIsReminderModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function loadPatientData() {
-      if (!patientIdParam) return;
-      try {
-        const [pData, sData] = await Promise.all([
-          getPatientById(patientIdParam),
-          getScreeningsByPatientId(patientIdParam),
-        ]);
-        setPatient(pData);
-        setScreenings(sData);
-      } catch (err) {
-        console.error('Failed to load patient details:', err);
-      } finally {
-        setLoading(false);
-      }
+  const loadPatientData = useCallback(async () => {
+    if (!patientIdParam) return;
+    try {
+      const [pData, sData, rData] = await Promise.all([
+        getPatientById(patientIdParam),
+        getScreeningsByPatientId(patientIdParam),
+        getReminders({ patientId: patientIdParam }),
+      ]);
+      setPatient(pData);
+      setScreenings(sData);
+      setReminders(rData.items);
+    } catch (err) {
+      console.error('Failed to load patient details:', err);
+    } finally {
+      setLoading(false);
     }
-    loadPatientData();
   }, [patientIdParam]);
+
+  useEffect(() => {
+    loadPatientData();
+  }, [loadPatientData]);
 
   if (loading) {
     return (
@@ -171,6 +189,44 @@ export default function PatientDetailsPage() {
           </div>
         )}
       </div>
+
+      {/* Patient Follow-Up Reminders Section */}
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-4">
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+            <CalendarClock className="w-4 h-4 text-teal-600" />
+            <span>Follow-Up Reminders & Brevo Notifications</span>
+          </h2>
+
+          <button
+            type="button"
+            onClick={() => setIsReminderModalOpen(true)}
+            className="px-3 py-1.5 bg-teal-700 hover:bg-teal-600 text-white text-xs font-bold rounded-lg transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>Schedule Follow-up</span>
+          </button>
+        </div>
+
+        <ReminderList
+          reminders={reminders}
+          onRefresh={loadPatientData}
+          showPatientName={false}
+        />
+      </div>
+
+      {/* Schedule Reminder Modal */}
+      {isReminderModalOpen && (
+        <ScheduleReminderModal
+          isOpen={isReminderModalOpen}
+          onClose={() => setIsReminderModalOpen(false)}
+          patientId={patient.patientId}
+          patientName={patient.name}
+          patientEmail={patient.contactNumber && patient.contactNumber.includes('@') ? patient.contactNumber : ''}
+          patientPhone={patient.contactNumber || ''}
+          onSuccess={() => loadPatientData()}
+        />
+      )}
     </div>
   );
 }

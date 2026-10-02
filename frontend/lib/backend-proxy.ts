@@ -2,42 +2,42 @@ import { NextResponse } from 'next/server';
 import { apiError, apiSuccess } from '@/lib/utils';
 
 export const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8000';
+
 export async function backendFetch(
   path: string,
   opts: { method?: string; body?: unknown; token?: string } = {}
 ): Promise<{ ok: boolean; status: number; json: any }> {
-  const url = `${BACKEND_URL}${path}`;
-
-  try {
-    console.log('[backendFetch] URL:', url);
-
-    const res = await fetch(url, {
-      method: opts.method || 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(opts.token ? { Authorization: `Bearer ${opts.token}` } : {}),
-      },
-      body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined,
-      cache: 'no-store',
-    });
-
-    const json = await res.json().catch(() => ({}));
-
-    console.log('[backendFetch] status:', res.status);
-
-    return { ok: res.ok, status: res.status, json };
-  } catch (error) {
-    console.error('[backendFetch] FAILED:', error);
-    throw error;
-  }
+  const res = await fetch(`${BACKEND_URL}${path}`, {
+    method: opts.method || 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(opts.token ? { Authorization: `Bearer ${opts.token}` } : {}),
+    },
+    body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined,
+    cache: 'no-store',
+  });
+  const json = await res.json().catch(() => ({}));
+  return { ok: res.ok, status: res.status, json };
 }
+
+function extractErrorMessage(detail: any): string {
+  if (!detail) return 'Request failed';
+  if (typeof detail === 'string') return detail;
+  if (typeof detail === 'object') {
+    if (detail.message) return detail.message;
+    if (Array.isArray(detail)) return detail.map((d: any) => d?.msg || JSON.stringify(d)).join(', ');
+    return JSON.stringify(detail);
+  }
+  return String(detail);
+}
+
 // Auth endpoints return { message } on success, { detail } on error.
 export async function proxyMessage(
   path: string,
   body: unknown
 ): Promise<NextResponse> {
   const { ok, status, json } = await backendFetch(path, { body });
-  if (!ok) return apiError(json?.detail || 'Request failed', status);
+  if (!ok) return apiError(extractErrorMessage(json?.detail), status);
   return apiSuccess(json?.message || 'Success');
 }
 
@@ -51,6 +51,6 @@ export async function proxyData(
     body: opts.body,
     token: opts.token,
   });
-  if (!ok) return apiError(json?.detail || 'Request failed', status);
+  if (!ok) return apiError(extractErrorMessage(json?.detail), status);
   return apiSuccess('Success', json);
 }

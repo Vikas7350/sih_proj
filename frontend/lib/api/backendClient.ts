@@ -107,8 +107,9 @@ function toPrediction(raw: Record<string, unknown> | null): DRPrediction | undef
     grade: (raw.grade as DRGrade) || 0,
     label: (raw.label as DRPrediction["label"]) || "No DR",
     description: (raw.description as string) || "",
-    // Backend returns 0-1 decimal, frontend expects percentage (0-100)
-    confidence: confidence <= 1 ? Math.round(confidence * 1000) / 10 : confidence,
+    // Backend returns 0-1 decimal, frontend expects percentage (0-100).
+    // Capped at 99.9: raw uncalibrated softmax rounds to a false 100% at 1 dp.
+    confidence: confidence <= 1 ? Math.min(99.9, Math.round(confidence * 10000) / 100) : confidence,
     probabilities: probabilities
       ? Object.fromEntries(
         Object.entries(probabilities).map(([k, v]) => [
@@ -202,6 +203,30 @@ export async function createPatient(payload: {
       diabetes_duration_years: payload.diabetesDurationYears || 0,
       contact_number: payload.contactNumber || "",
     }),
+  });
+  return toPatient(data);
+}
+
+export async function updatePatient(
+  patientId: string,
+  payload: Partial<{
+    name: string;
+    age: number;
+    gender: string;
+    diabetesDurationYears: number;
+    contactNumber: string;
+  }>
+): Promise<Patient> {
+  const body: Record<string, unknown> = {};
+  if (payload.name !== undefined) body.name = payload.name;
+  if (payload.age !== undefined) body.age = payload.age;
+  if (payload.gender !== undefined) body.gender = payload.gender;
+  if (payload.diabetesDurationYears !== undefined) body.diabetes_duration_years = payload.diabetesDurationYears;
+  if (payload.contactNumber !== undefined) body.contact_number = payload.contactNumber;
+
+  const data = await apiFetch<Record<string, unknown>>(`/patients/${patientId}`, {
+    method: "PUT",
+    body: JSON.stringify(body),
   });
   return toPatient(data);
 }
