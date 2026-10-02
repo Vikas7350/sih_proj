@@ -42,6 +42,12 @@ export function toSessionUser(payload: Record<string, unknown>): SessionUser {
   };
 }
 
+export function isValidPayload(payload: Record<string, unknown> | null): boolean {
+  if (!payload) return false;
+  const userId = (payload.sub as string) || (payload.id as string) || null;
+  return Boolean(userId);
+}
+
 /** Verify the token bytes were signed with our AUTH_SECRET. Returns raw payload. */
 export async function verifyToken(token: string): Promise<Record<string, unknown> | null> {
   if (!token) return null;
@@ -54,3 +60,4 @@ export async function verifyToken(token: string): Promise<Record<string, unknown
     return null;
   }
 }
+
