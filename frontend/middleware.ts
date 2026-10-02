@@ -1,44 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { SESSION_COOKIE, verifyToken, isValidPayload } from '@/lib/auth/token';
 
-const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8000';
-const SESSION_COOKIE = process.env.SESSION_COOKIE_NAME || 'dr_token';
-
+/**
+ * Route guard for the backend-owned cookie session. Protects the dashboard +
+ * onboarding; sends authenticated users away from the auth pages.
+ */
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get(SESSION_COOKIE)?.value;
+  const payload = token ? await verifyToken(token) : null;
+  const isAuthed = isValidPayload(payload);
+  const phcId = (payload?.phcId as string) || (payload?.phc_id as string) || null;
+  const needsProfile = isAuthed ? (Boolean(payload?.needs_profile) || !phcId) : false;
 
   const isDashboard = pathname.startsWith('/dashboard');
   const isOnboarding = pathname === '/onboarding';
   const isProtected = isDashboard || isOnboarding;
-
   const isAuthPage =
     pathname === '/login' ||
     pathname === '/register' ||
     pathname === '/verify-email' ||
     pathname === '/forgot-password' ||
     pathname === '/reset-password';
-
-  let isAuthed = false;
-  let needsProfile = false;
-
-  if (token) {
-    try {
-      const response = await fetch(`${BACKEND_URL}/api/auth/me`, {
-        headers: {
-          Cookie: `${SESSION_COOKIE}=${token}`,
-        },
-        cache: 'no-store',
-      });
-
-      if (response.ok) {
-        const user = await response.json();
-        isAuthed = true;
-        needsProfile = Boolean(user?.needs_profile) || !user?.phc_id;
-      }
-    } catch {
-      isAuthed = false;
-    }
-  }
 
   if (isProtected && !isAuthed) {
     const url = req.nextUrl.clone();
@@ -68,13 +51,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    '/dashboard/:path*',
-    '/onboarding',
-    '/login',
-    '/register',
-    '/verify-email',
-    '/forgot-password',
-    '/reset-password',
-  ],
+  matcher: ['/dashboard/:path*', '/onboarding', '/login', '/register', '/verify-email', '/forgot-password', '/reset-password'],
 };
