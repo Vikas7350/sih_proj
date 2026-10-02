@@ -8,7 +8,11 @@ import { jwtVerify } from 'jose';
 export const SESSION_COOKIE = process.env.SESSION_COOKIE_NAME || 'dr_token';
 
 function secretKey(): Uint8Array {
-  return new TextEncoder().encode(process.env.AUTH_SECRET || '');
+  const secret = process.env.AUTH_SECRET || '';
+  if (!secret && typeof window === 'undefined') {
+    console.warn('[AUTH] Warning: process.env.AUTH_SECRET is empty. Ensure AUTH_SECRET is set in AWS Amplify environment variables.');
+  }
+  return new TextEncoder().encode(secret);
 }
 
 export interface SessionUser {
@@ -40,8 +44,11 @@ export function toSessionUser(payload: Record<string, unknown>): SessionUser {
 
 /** Verify the token bytes were signed with our AUTH_SECRET. Returns raw payload. */
 export async function verifyToken(token: string): Promise<Record<string, unknown> | null> {
+  if (!token) return null;
   try {
-    const { payload } = await jwtVerify(token, secretKey(), { algorithms: ['HS256'] });
+    const key = secretKey();
+    if (!key.length) return null;
+    const { payload } = await jwtVerify(token, key, { algorithms: ['HS256'] });
     return payload as unknown as Record<string, unknown>;
   } catch {
     return null;
